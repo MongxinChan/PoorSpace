@@ -3,6 +3,7 @@ package com.gmail.jobstone.listener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gmail.jobstone.*;
 import com.gmail.jobstone.space.NormalSpace;
@@ -402,12 +403,11 @@ public class SpaceListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void explode(EntityExplodeEvent e) {
-		List<Block> blockListCopy = new ArrayList<>();
-	    blockListCopy.addAll(e.blockList());
+		Map<NormalSpace, Boolean> explodeCache = new HashMap<>();
+		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
-			Location loc = block.getLocation();
-			NormalSpace space = SpaceManager.getSpace(loc);
-			if (!space.canExplode())
+			NormalSpace space = SpaceManager.getSpace(block.getLocation());
+			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
 				e.blockList().remove(block);
 		}
 	}
@@ -441,12 +441,11 @@ public class SpaceListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void explode4(BlockExplodeEvent e) {
-		List<Block> blockListCopy = new ArrayList<>();
-		blockListCopy.addAll(e.blockList());
+		Map<NormalSpace, Boolean> explodeCache = new HashMap<>();
+		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
-			Location loc = block.getLocation();
-			NormalSpace space = SpaceManager.getSpace(loc);
-			if (!space.canExplode())
+			NormalSpace space = SpaceManager.getSpace(block.getLocation());
+			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
 				e.blockList().remove(block);
 		}
 	}
