@@ -10,6 +10,19 @@ import java.util.List;
 
 public abstract class Space {
 
+    protected void saveConfigAsync(FileConfiguration config) {
+        new org.bukkit.scheduler.BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    config.save(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(com.gmail.jobstone.PoorSpace.plugin);
+    }
+
     int world;
     File file;
     List<String> group1 = new ArrayList<>();
@@ -71,11 +84,7 @@ public abstract class Space {
                 config.set("group3", group3);
                 break;
         }
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.saveConfigAsync(config);
     }
 
 
@@ -105,13 +114,8 @@ public abstract class Space {
                 }
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("group" + group, original);
-                try {
-                    config.save(file);
-                    return 1;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return 0;
-                }
+                this.saveConfigAsync(config);
+                return 1;
             default:
                 return 0;
         }
@@ -128,13 +132,8 @@ public abstract class Space {
                 original.removeAll(names);
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("group" + group, original);
-                try {
-                    config.save(file);
-                    return true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
+                this.saveConfigAsync(config);
+                return true;
             default:
                 return false;
         }
@@ -156,11 +155,7 @@ public abstract class Space {
                         original[j] = pm[j];
                 }
                 config.set("permission" + i, String.valueOf(original));
-                try {
-                    config.save(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.saveConfigAsync(config);
         }
     }
 
