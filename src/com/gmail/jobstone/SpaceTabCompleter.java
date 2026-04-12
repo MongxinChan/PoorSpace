@@ -35,25 +35,30 @@ public class SpaceTabCompleter implements TabCompleter {
                     startCheck(first, args[0], list);
                 }
                 else if (args.length == 2) {
-                    if (args[0].equals("permission"))
+                    if (args[0].equals("permission")) {
                         list.add("set");
-
-                    else if (args[0].equals("pmgroup")) {
-                        if ("set".startsWith(args[1].toLowerCase()))
+                    } else if (args[0].equals("pmgroup")) {
+                        if ("set".startsWith(args[1].toLowerCase())) {
                             list.add("set");
-                        if ("add".startsWith(args[1].toLowerCase()))
+                        }
+                        if ("add".startsWith(args[1].toLowerCase())) {
                             list.add("add");
-                        if ("remove".startsWith(args[1].toLowerCase()))
+                        }
+                        if ("remove".startsWith(args[1].toLowerCase())) {
                             list.add("remove");
+                        }
                     }
-
+                    // [TODO] 这里改成switch
                     else if (args[0].equals("selector")) {
-                        if ("set".startsWith(args[1].toLowerCase()))
+                        if ("set".startsWith(args[1].toLowerCase())) {
                             list.add("set");
-                        if ("remove".startsWith(args[1].toLowerCase()))
+                        }
+                        if ("remove".startsWith(args[1].toLowerCase())) {
                             list.add("remove");
-                        if ("list".startsWith(args[1].toLowerCase()))
+                        }
+                        if ("list".startsWith(args[1].toLowerCase())) {
                             list.add("list");
+                        }
                     }
 
                     else if (args[0].equals("space")) {
@@ -61,14 +66,18 @@ public class SpaceTabCompleter implements TabCompleter {
                     }
 
                     else if (args[0].equals("group")) {
-                        if ("search".startsWith(args[1].toLowerCase()))
+                        if ("search".startsWith(args[1].toLowerCase())) {
                             list.add("search");
-                        if ("add".startsWith(args[1].toLowerCase()))
+                        }
+                        if ("add".startsWith(args[1].toLowerCase())) {
                             list.add("add");
-                        if ("remove".startsWith(args[1].toLowerCase()))
+                        }
+                        if ("remove".startsWith(args[1].toLowerCase())) {
                             list.add("remove");
-                        if ("create".startsWith(args[1].toLowerCase()))
+                        }
+                        if ("create".startsWith(args[1].toLowerCase())) {
                             list.add("create");
+                        }
                     }
 
                     else if (args[0].equals("copy")) {
@@ -83,9 +92,11 @@ public class SpaceTabCompleter implements TabCompleter {
                     else if (args[0].equals("selector") && args[1].equals("remove")) {
 
                         SpacePlayer spaceplayer = new SpacePlayer(player.getName());
-                        for (String selector : spaceplayer.getSelectorsSet())
-                            if (selector.startsWith(args[2].toLowerCase()))
+                        for (String selector : spaceplayer.getSelectorsSet()) {
+                            if (selector.startsWith(args[2].toLowerCase())) {
                                 list.add(selector);
+                            }
+                        }
 
                     }
 
@@ -109,29 +120,38 @@ public class SpaceTabCompleter implements TabCompleter {
                 }
                 else if (args.length == 4) {
                     if ((args[0].equals("permission") && args[1].equals("set")) || (args[0].equals("pmgroup") && (args[1].equals("set") || args[1].equals("add") || args[1].equals("remove"))) && NormalSpace.getWorldId(args[2]) != -1) {
-                        if ("now".startsWith(args[3].toLowerCase()))
+                        if ("now".startsWith(args[3].toLowerCase())) {
                             list.add("now");
-                        if ("all".startsWith(args[3].toLowerCase()))
+                        }
+                        if ("all".startsWith(args[3].toLowerCase())) {
                             list.add("all");
-                        if ("new".startsWith(args[3].toLowerCase()))
+                        }
+                        if ("new".startsWith(args[3].toLowerCase())) {
                             list.add("new");
+                        }
 
                         SpacePlayer spaceplayer = new SpacePlayer(player.getName());
-                        for (String selector : spaceplayer.getSelectorsSet())
-                            if (selector.startsWith(args[3].toLowerCase()))
+                        for (String selector : spaceplayer.getSelectorsSet()) {
+                            if (selector.startsWith(args[3].toLowerCase())) {
                                 list.add(selector);
+                            }
+                        }
                     }
                 }
                 else if (args.length == 5) {
                     if ((args[0].equals("permission") && args[1].equals("set")) || (args[0].equals("pmgroup") && (args[1].equals("set") || args[1].equals("add") || args[1].equals("remove"))) && NormalSpace.getWorldId(args[2]) != -1) {
-                        if ("1".startsWith(args[4]))
+                        if ("1".startsWith(args[4])) {
                             list.add("1");
-                        if ("2".startsWith(args[4]))
+                        }
+                        if ("2".startsWith(args[4])) {
                             list.add("2");
-                        if ("3".startsWith(args[4]))
+                        }
+                        if ("3".startsWith(args[4])) {
                             list.add("3");
-                        if (args[0].equals("permission") && "4".startsWith(args[4].toLowerCase()))
+                        }
+                        if (args[0].equals("permission") && "4".startsWith(args[4].toLowerCase())) {
                             list.add("4");
+                        }
                     }
                 }
                 else if (args.length >= 6) {
@@ -151,9 +171,11 @@ public class SpaceTabCompleter implements TabCompleter {
     }
 
     private static void startCheck(List<String> list, String arg, List<String> addto) {
-        for (String string : list)
-            if (string.startsWith(arg.toLowerCase()))
+        for (String string : list) {
+            if (string.startsWith(arg.toLowerCase())) {
                 addto.add(string);
+            }
+        }
     }
 
 }

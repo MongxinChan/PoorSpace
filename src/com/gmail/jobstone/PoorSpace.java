@@ -83,8 +83,9 @@ public class PoorSpace extends JavaPlugin {
                     Objective obj;
                     board = Bukkit.getScoreboardManager().getNewScoreboard();
                     obj = board.getObjective("PoorSpace");
-                    if (obj != null)
+                    if (obj != null) {
                         obj.unregister();
+                    }
                     obj = board.registerNewObjective("PoorSpace", "dummy", "§e§lPoorSpace");
                     obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                     Location loc = player.getLocation();
@@ -134,8 +135,9 @@ public class PoorSpace extends JavaPlugin {
                                 try {
                                     Files.copy(dir, targetdir);
                                 } catch (FileAlreadyExistsException e) {
-                                    if (!Files.isDirectory(targetdir))
+                                    if (!Files.isDirectory(targetdir)) {
                                         throw e;
+                                    }
                                 }
                                 return FileVisitResult.CONTINUE;
                             }
@@ -165,15 +167,18 @@ public class PoorSpace extends JavaPlugin {
                     FileConfiguration config = YamlConfiguration.loadConfiguration(spaceFile);
                     for (int i = 0; i < 4; ++i) {
                         char[] pm = Objects.requireNonNull(config.getString(permissions[i])).toCharArray();
-                        if (i == 0 && pm.length == 8)
+                        if (i == 0 && pm.length == 8) {
                             return;
+                        }
                         ArrayList<Character> list = new ArrayList<>();
-                        for (char pms : pm)
+                        for (char pms : pm) {
                             list.add(pms);
+                        }
                         list.add(7, pm[2]);
                         StringBuilder sb = new StringBuilder();
-                        for (char c : list)
+                        for (char c : list) {
                             sb.append(c);
+                        }
                         config.set(permissions[i], sb.toString());
                     }
                     try {
@@ -193,12 +198,14 @@ public class PoorSpace extends JavaPlugin {
                 for (int i = 0; i < 4; ++i) {
                     char[] pm = Objects.requireNonNull(config.getString(permissions[i])).toCharArray();
                     ArrayList<Character> list = new ArrayList<>();
-                    for (char pms : pm)
+                    for (char pms : pm) {
                         list.add(pms);
+                    }
                     list.add(7, pm[2]);
                     StringBuilder sb = new StringBuilder();
-                    for (char c : list)
+                    for (char c : list) {
                         sb.append(c);
+                    }
                     config.set(permissions[i], sb.toString());
                 }
                 try {

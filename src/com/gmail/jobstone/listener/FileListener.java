@@ -20,8 +20,9 @@ public class FileListener implements Listener {
 	public void onLogin(PlayerLoginEvent e) {
 
 		SpacePlayer player = new SpacePlayer(e.getPlayer().getName());
-		if (!player.exists())
-			player.createFiles();
+		if (!player.exists()) {
+            player.createFiles();
+        }
 		
 	}
 

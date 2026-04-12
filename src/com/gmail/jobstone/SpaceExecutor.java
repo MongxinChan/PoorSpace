@@ -53,16 +53,19 @@ public class SpaceExecutor implements CommandExecutor {
                                 String id = args[2];
                                 if (NormalSpace.isSpaceLegal(id, world)) {
                                     SpaceOpen.openSpace(player, id, world);
-                                } else
+                                } else {
                                     player.sendMessage("§7【PoorSpace】该空间不存在！");
-                            } else
+                                }
+                            } else {
                                 player.sendMessage("§7【PoorSpace】该世界不存在！");
+                            }
                         }
                         break;
                     }
                     case "pmgroup": {
-                        if (args.length < 5 || args.length > 15)
+                        if (args.length < 5 || args.length > 15) {
                             return true;
+                        }
                         OperationType operation;
                         switch (args[1]) {
                             case "set":
@@ -93,8 +96,9 @@ public class SpaceExecutor implements CommandExecutor {
                             OperationResult<List<String>> result = spacePlayer.changeSpacePermissionGroup(operation, world, selector, groupId, list);
                             if (result.success()) {
                                 StringBuilder sb = new StringBuilder();
-                                for (int i = 5; i < args.length; i++)
+                                for (int i = 5; i < args.length; i++) {
                                     sb.append("\n§7 - ").append(args[i]);
+                                }
                                 String nameList = sb.toString();
                                 nameList = "".equals(nameList) ? "空" : nameList;
 
@@ -102,8 +106,9 @@ public class SpaceExecutor implements CommandExecutor {
                                 List<String> changedSpaces = result.getContent();
                                 int size = changedSpaces.size();
                                 for (int i = 0; i < size; ++i) {
-                                    if (i != 0)
+                                    if (i != 0) {
                                         spaceString.append(", ");
+                                    }
                                     spaceString.append(changedSpaces.get(i));
                                 }
 
@@ -115,19 +120,21 @@ public class SpaceExecutor implements CommandExecutor {
                                 component.addExtra(extra2);
 
                                 player.spigot().sendMessage(component);
-                            } else
+                            } else {
                                 player.sendMessage("§7【PoorSpace】" + result.getMessage());
+                            }
                         }).start();
                         break;
                     }
                     case "group": {
-                        if (args.length == 1)
+                        if (args.length == 1) {
                             SpaceOpen.openGroups(player);
-                        else if (args[1].equals("search")) {
-                            if (args.length == 2)
+                        } else if (args[1].equals("search")) {
+                            if (args.length == 2) {
                                 SpaceOpen.searchGroups(player);
-                            else if (args.length == 3)
+                            } else if (args.length == 3) {
                                 SpaceOpen.searchGroups(player, args[2]);
+                            }
                         } else if (args[1].equals("add")) {
                             if (args.length >= 4 && args.length <= 13) {
 
@@ -138,28 +145,33 @@ public class SpaceExecutor implements CommandExecutor {
                                     if (role.equals(SpaceGroup.GroupRole.OWNER) || role.equals(SpaceGroup.GroupRole.OP)) {
                                         new Thread(() -> {
                                             Set<String> members = new HashSet<>();
-                                            for (int i = 3; i < args.length; i++)
+                                            for (int i = 3; i < args.length; i++) {
                                                 members.add(args[i]);
+                                            }
                                             Set<String> fails = group.addMembers(members);
                                             StringBuilder fail = new StringBuilder("");
                                             boolean b = true;
                                             for (String f : fails) {
-                                                if (!b)
+                                                if (!b) {
                                                     fail.append(", ");
-                                                else
+                                                } else {
                                                     b = false;
+                                                }
                                                 fail.append(f);
                                             }
                                             String msg = "§7【PoorSpace】已添加相关玩家！";
-                                            if (!fails.isEmpty())
+                                            if (!fails.isEmpty()) {
                                                 msg += "以下玩家因加入的群组数已满添加失败：\n§7" + fail.toString();
+                                            }
                                             player.sendMessage(msg);
                                         }).start();
-                                    } else
+                                    } else {
                                         player.sendMessage("§7【PoorSpace】你没有权限为该群组添加玩家！");
+                                    }
 
-                                } else
+                                } else {
                                     player.sendMessage("§7【PoorSpace】未找到名为“" + args[2] + "”的群组。");
+                                }
 
                             }
                         } else if (args[1].equals("remove")) {
@@ -172,24 +184,28 @@ public class SpaceExecutor implements CommandExecutor {
                                     if (role.equals(SpaceGroup.GroupRole.OP)) {
                                         new Thread(() -> {
                                             Set<String> members = new HashSet<>();
-                                            for (int i = 3; i < args.length; i++)
+                                            for (int i = 3; i < args.length; i++) {
                                                 members.add(args[i]);
+                                            }
                                             group.removeMembers(members);
                                             player.sendMessage("§7【PoorSpace】成功移除相关玩家！");
                                         }).start();
                                     } else if (role.equals(SpaceGroup.GroupRole.OWNER)) {
                                         new Thread(() -> {
                                             Set<String> members = new HashSet<>();
-                                            for (int i = 3; i < args.length; i++)
+                                            for (int i = 3; i < args.length; i++) {
                                                 members.add(args[i]);
+                                            }
                                             group.removeAll(members);
                                             player.sendMessage("§7【PoorSpace】成功移除相关玩家！");
                                         }).start();
-                                    } else
+                                    } else {
                                         player.sendMessage("§7【PoorSpace】你没有权限移除该权限组的玩家！");
+                                    }
 
-                                } else
+                                } else {
                                     player.sendMessage("§7【PoorSpace】未找到名为“" + args[2] + "”的群组。");
+                                }
 
                             }
                         } else if (args[1].equals("create")) {
@@ -203,15 +219,18 @@ public class SpaceExecutor implements CommandExecutor {
                                     } else {
                                         if (args[2].length() <= 10) {
                                             SpaceGroup group = new SpaceGroup(args[2]);
-                                            if (group.exists())
+                                            if (group.exists()) {
                                                 player.sendMessage("§7【PoorSpace】名为" + args[2] + "的群组已经存在！");
-                                            else
+                                            } else {
                                                 SpaceOpen.createGroup(player, args[2]);
-                                        } else
+                                            }
+                                        } else {
                                             player.sendMessage("§7【PoorSpace】群组名称不能超过10个字符！");
+                                        }
                                     }
-                                } else
+                                } else {
                                     player.sendMessage("§7【PoorSpace】您加入的群组数已到达上限！");
+                                }
 
                             }
                         }
@@ -246,8 +265,9 @@ public class SpaceExecutor implements CommandExecutor {
                                     List<String> changedSpaces = result.getContent();
                                     int size = changedSpaces.size();
                                     for (int i = 0; i < size; ++i) {
-                                        if (i != 0)
+                                        if (i != 0) {
                                             spaceString.append(", ");
+                                        }
                                         spaceString.append(changedSpaces.get(i));
                                     }
 
@@ -259,8 +279,9 @@ public class SpaceExecutor implements CommandExecutor {
                                     component.addExtra(extra2);
 
                                     player.spigot().sendMessage(component);
-                                } else
+                                } else {
                                     player.sendMessage("§7【PoorSpace】" + result.getMessage());
+                                }
                             }).start();
                         }
                         break;
@@ -319,8 +340,9 @@ public class SpaceExecutor implements CommandExecutor {
                                 player.sendMessage("§7【PoorSpace】您未设置任何选择器。");
                             } else {
                                 StringBuilder sbd = new StringBuilder("§7【PoorSpace】您已设置的选择器如下：");
-                                for (String name : set)
+                                for (String name : set) {
                                     sbd.append("\n - ").append(name).append(" : ").append(section.getString(name));
+                                }
                                 player.sendMessage(sbd.toString());
                             }
                         }
@@ -346,18 +368,20 @@ public class SpaceExecutor implements CommandExecutor {
                             String selector = SpacePlayer.preProcessSelector(player, world, args[2]);
                             String selectorCreative = SpacePlayer.preProcessSelector(player, 3, args[3]);
                             OperationResult<Pair<List<String>, Integer>> result = spaceplayer.copySpaces(world, selector, selectorCreative, amount);
-                            if (!result.success())
+                            if (!result.success()) {
                                 player.sendMessage("§7【PoorSpace】" + result.getMessage());
-                            else {
+                            } else {
                                 Pair<List<String>, Integer> pair = result.getContent();
-                                if (hasDust)
+                                if (hasDust) {
                                     itemStack.setAmount(amount - pair.second);
+                                }
                                 StringBuilder spaceString = new StringBuilder("§7");
                                 List<String> changedSpaces = pair.first;
                                 int size = changedSpaces.size();
                                 for (int i = 0; i < size; ++i) {
-                                    if (i != 0)
+                                    if (i != 0) {
                                         spaceString.append(", ");
+                                    }
                                     spaceString.append(changedSpaces.get(i));
                                 }
 
