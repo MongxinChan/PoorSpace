@@ -404,10 +404,11 @@ public class SpaceListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void explode(EntityExplodeEvent e) {
+		Map<String, NormalSpace> groupSpace = new HashMap<>();
 		Map<NormalSpace, Boolean> explodeCache = new HashMap<>();
 		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
-			NormalSpace space = SpaceManager.getSpace(block.getLocation());
+			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.getSpace(block.getLocation()));
 			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
 				e.blockList().remove(block);
 		}
@@ -442,10 +443,11 @@ public class SpaceListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void explode4(BlockExplodeEvent e) {
+		Map<String, NormalSpace> groupSpace = new HashMap<>();
 		Map<NormalSpace, Boolean> explodeCache = new HashMap<>();
 		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
-			NormalSpace space = SpaceManager.getSpace(block.getLocation());
+			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.getSpace(block.getLocation()));
 			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
 				e.blockList().remove(block);
 		}

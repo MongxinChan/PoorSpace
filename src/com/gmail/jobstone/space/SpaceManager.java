@@ -1,13 +1,18 @@
 package com.gmail.jobstone.space;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.gmail.jobstone.PoorSpace;
 
 public class SpaceManager {
 
@@ -63,7 +68,32 @@ public class SpaceManager {
         return loadedSpaces.size();
     }
 
+    public static final Set<String> knownFiles = ConcurrentHashMap.newKeySet();
+
+    private static void scanDirectory(File dir) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    scanDirectory(file);
+                } else if (file.getName().endsWith(".yml")) {
+                    knownFiles.add(file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    public static boolean scanFinished = false;
+
     public static void initialize() {
+        Bukkit.getScheduler().runTaskAsynchronously(PoorSpace.plugin, () -> {
+            File spacesDir = new File(PoorSpace.plugin.getDataFolder(), "spaces");
+            if (spacesDir.exists()) {
+                scanDirectory(spacesDir);
+            }
+            scanFinished = true;
+        });
+
         SpaceManager.spaceWorlds.put("world", new SpaceManager("world"));
         SpaceManager.spaceWorlds.put("world_nether", new SpaceManager("world_nether"));
         SpaceManager.spaceWorlds.put("world_the_end", new SpaceManager("world_the_end"));

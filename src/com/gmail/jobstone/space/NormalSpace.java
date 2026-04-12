@@ -30,7 +30,8 @@ public class NormalSpace extends Space {
         this.id = id;
         this.world = world;
         this.file = NormalSpace.getFile(world, id);
-        if (file.exists()) {
+        boolean exist = SpaceManager.scanFinished ? SpaceManager.knownFiles.contains(file.getAbsolutePath()) : file.exists();
+        if (exist) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             owner = config.getString("owner");
             ownerType = SpaceOwner.OwnerType.valueOf(config.getString("owner_type"));
@@ -130,6 +131,7 @@ public class NormalSpace extends Space {
         ownerType = spaceOwner.getType();
         config.set("owner", owner);
         config.set("owner_type", ownerType.name());
+        SpaceManager.knownFiles.add(this.file.getAbsolutePath());
         this.saveConfigAsync(config);
         this.update();
     }
@@ -172,6 +174,7 @@ public class NormalSpace extends Space {
             return;
         spaceOwner.removeSpace(world, id);
         this.file.delete();
+        SpaceManager.knownFiles.remove(this.file.getAbsolutePath());
         this.update();
     }
 
