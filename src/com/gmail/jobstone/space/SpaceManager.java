@@ -31,8 +31,9 @@ public class SpaceManager {
     private ConcurrentMap<String, NormalSpace> loadedSpaces = spaceCache.asMap();
 
     public boolean allocateSpace(String id) {
-        if (isCachedInRAM(id))
+        if (isCachedInRAM(id)) {
             return false;
+        }
         loadedSpaces.put(id, new NormalSpace(id, world));
         return true;
     }

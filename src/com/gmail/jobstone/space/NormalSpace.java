@@ -46,8 +46,9 @@ public class NormalSpace extends Space {
         else {
             owner = null;
             ownerType = null;
-            if (world == 3)
+            if (world == 3) {
                 permission4[1] = '0';
+            }
         }
     }
 
@@ -76,10 +77,11 @@ public class NormalSpace extends Space {
     }
 
     public SpaceOwner getOwner() {
-        if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER))
+        if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER)) {
             return new SpacePlayer(owner);
-        else
+        } else {
             return null;
+        }
     }
 
 
@@ -89,10 +91,11 @@ public class NormalSpace extends Space {
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.setDisplayName("§a§l空间"+id);
         ArrayList<String> lore = new ArrayList<String>();
-        if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER))
+        if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER)) {
             lore.add("§7所有者：§e"+owner);
-        else
+        } else {
             lore.add("§7所有者：§e"+owner+"[群组]");
+        }
         lore.add("§e点击查看");
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -111,8 +114,9 @@ public class NormalSpace extends Space {
             config.set("permission3", String.valueOf(permission3));
             config.set("permission4", String.valueOf(permission4));
         }
-        else
+        else {
             this.getOwner().removeSpace(world, id);
+        }
 
         File defaultFile = spaceOwner.getDefaultWorldFile(world);
         if (defaultFile.exists()) {
@@ -146,8 +150,9 @@ public class NormalSpace extends Space {
     @Override
     public int addGroup(int group, List<String> names) {
         int result = super.addGroup(group, names);
-        if (1 == result)
+        if (1 == result) {
             this.syncToCache();
+        }
         return result;
     }
 
@@ -155,8 +160,9 @@ public class NormalSpace extends Space {
     @Override
     public boolean removeGroup(int group, List<String> names) {
         boolean result = super.removeGroup(group, names);
-        if (result)
+        if (result) {
             this.syncToCache();
+        }
         return result;
     }
 
@@ -168,10 +174,11 @@ public class NormalSpace extends Space {
 
     public void deleteSpaceAndFiles() {
         SpaceOwner spaceOwner;
-        if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER))
+        if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER)) {
             spaceOwner = new SpacePlayer(owner);
-        else
+        } else {
             return;
+        }
         spaceOwner.removeSpace(world, id);
         this.file.delete();
         SpaceManager.knownFiles.remove(this.file.getAbsolutePath());
@@ -254,21 +261,24 @@ public class NormalSpace extends Space {
         int startz1 = startz+16;
         Set<int[]> set = new HashSet<>();
 
-        for (int i = 0; bottom+i <= top; i = i+2)
+        for (int i = 0; bottom+i <= top; i = i+2) {
             for (int j = 0; j <= 16; j = j+2) {
                 set.add(new int[]{startx, bottom+i, startz+j});
                 set.add(new int[]{startx1, bottom+i, startz+j});
             }
-        for (int i = 0; i <= 16; i = i+2)
+        }
+        for (int i = 0; i <= 16; i = i+2) {
             for (int j = 0; j <= 16; j = j+2) {
                 set.add(new int[]{startx+i, bottom, startz+j});
                 set.add(new int[]{startx+i, top, startz+j});
             }
-        for (int i = 0; i <= 16; i = i+2)
+        }
+        for (int i = 0; i <= 16; i = i+2) {
             for (int j = 0; bottom+j <= top; j = j+2) {
                 set.add(new int[]{startx+i, bottom+j, startz});
                 set.add(new int[]{startx+i, bottom+j, startz1});
             }
+        }
 
         new BukkitRunnable() {
             int times = 0;
@@ -276,8 +286,9 @@ public class NormalSpace extends Space {
             @Override
             public void run() {
 
-                for (int[] s : set)
+                for (int[] s : set) {
                     player.spawnParticle(Particle.FIREWORKS_SPARK, new Location(w, s[0], s[1], s[2]), 1, 0, 0, 0, 0);
+                }
                 times++;
                 if (times == 10) {
                     NormalSpace.limit.put(player.getName(), NormalSpace.limit.get(player.getName())-1);
@@ -318,10 +329,11 @@ public class NormalSpace extends Space {
                     return 300;
             }
         }
-        else if (world == 2)
+        else if (world == 2) {
             return 300;
-        else if (world == 3)
+        } else if (world == 3) {
             return 100;
+        }
         return 9999;
     }
 
@@ -340,27 +352,30 @@ public class NormalSpace extends Space {
         double y = loc.getY();
         String world = loc.getWorld().getName();
         if (world.equals("world")) {
-            if (y < 20)
+            if (y < 20) {
                 return x+"."+z+".0";
-            else if (y < 50)
+            } else if (y < 50) {
                 return x+"."+z+".1";
-            else if (y < 100)
+            } else if (y < 100) {
                 return x+"."+z+".2";
-            else if (y < 200)
+            } else if (y < 200) {
                 return x+"."+z+".3";
-            else
+            } else {
                 return x+"."+z+".4";
+            }
         }
         else if (world.equals("world_nether")) {
-            if (y < 50)
+            if (y < 50) {
                 return x+"."+z+".0";
-            else if (y < 128)
+            } else if (y < 128) {
                 return x+"."+z+".1";
-            else
+            } else {
                 return x+"."+z+".2";
+            }
         }
-        else
+        else {
             return x+"."+z+".0";
+        }
     }
 
 //	public static int getSpaceY(String world, int y) {
@@ -389,16 +404,18 @@ public class NormalSpace extends Space {
 //	}
 
     public static boolean isSpaceLegal(String id, int world) {
-        if (!id.contains(".") || !id.substring(id.indexOf(".")+1).contains("."))
+        if (!id.contains(".") || !id.substring(id.indexOf(".")+1).contains(".")) {
             return false;
+        }
         try {
             Integer.parseInt(id.substring(0, id.indexOf(".")));
             int y = Integer.parseInt(id.substring(id.lastIndexOf(".")+1));
             Integer.parseInt(id.substring(id.indexOf(".")+1, id.lastIndexOf(".")));
-            if (y >= 0 && y <= NormalSpace.getWorldMax(world))
+            if (y >= 0 && y <= NormalSpace.getWorldMax(world)) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         } catch (NumberFormatException e) {
             return false;
         }
@@ -434,8 +451,9 @@ public class NormalSpace extends Space {
 
     public static File resolveStorageFile(int world, String id) {
         String[] splits = id.split("\\.");
-        if (splits.length != 3)
+        if (splits.length != 3) {
             return null;
+        }
         try {
             int x = Integer.parseInt(splits[0]);
             int y = Integer.parseInt(splits[1]);
