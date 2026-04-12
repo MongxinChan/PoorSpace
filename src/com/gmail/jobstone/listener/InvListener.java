@@ -806,9 +806,7 @@ public class InvListener implements Listener {
 	
 	private void giveupClick(Player player, String id, String click, int world) {
 		if (click.equals("§4§l确认放弃")) {
-			new NormalSpace(id, world).remove();
-			SpaceManager manager = SpaceManager.getSpaceManager(world);
-			manager.update(id, new NormalSpace(id, world));
+			new NormalSpace(id, world).deleteSpaceAndFiles();
 			SpaceOpen.openSpace(player, id, world);
 			
 			@SuppressWarnings("deprecation")
