@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.15.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -36,6 +36,22 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>32.1.3-jre</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- PoorMessage (本地前置插件) -->
+        <dependency>
+            <groupId>com.gmail.jobstone</groupId>
+            <artifactId>PoorMessage</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>D:/02_Workspace/Study/spigot-1.15/plugins/PoorMessage.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-chat</artifactId>
+            <version>1.15-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

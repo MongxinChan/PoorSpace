@@ -541,7 +541,7 @@ public class SpaceListener implements Listener {
 	private boolean spawnEggs(Material material) {
 		return material.name().endsWith("SPAWN_EGG");
 	}
-	
+
 	private boolean monsters(EntityType type) {
 		switch(type) {
 		case WITHER:
