@@ -4,6 +4,10 @@ import org.bukkit.Location;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 public class SpaceManager {
 
@@ -15,7 +19,11 @@ public class SpaceManager {
         this.world = NormalSpace.getWorldId(world);
     }
 
-    private Map<String, NormalSpace> loadedSpaces = new HashMap<>();
+    private Cache<String, NormalSpace> spaceCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(15, TimeUnit.MINUTES)
+            .maximumSize(5000)
+            .build();
+    private ConcurrentMap<String, NormalSpace> loadedSpaces = spaceCache.asMap();
 
     public boolean load(String id) {
         if (isLoaded(id))
