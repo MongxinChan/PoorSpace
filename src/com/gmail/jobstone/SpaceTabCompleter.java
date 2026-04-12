@@ -16,10 +16,18 @@ public class SpaceTabCompleter implements TabCompleter {
 
     private static final List<String> first;
     private static final List<String> world;
+    private static final List<String> pmgroupArgs;
+    private static final List<String> selectorArgs;
+    private static final List<String> groupArgs;
+    private static final List<String> timeArgs;
 
     static {
         first = Arrays.asList("permission", "pmgroup", "on", "off", "selector", "space", "group", "copy");
         world = Arrays.asList("world", "world_nether", "world_the_end", "creative");
+        pmgroupArgs = Arrays.asList("set", "add", "remove");
+        selectorArgs = Arrays.asList("set", "remove", "list");
+        groupArgs = Arrays.asList("search", "add", "remove", "create");
+        timeArgs = Arrays.asList("now", "all", "new");
     }
 
     public SpaceTabCompleter(){}
@@ -40,44 +48,17 @@ public class SpaceTabCompleter implements TabCompleter {
                             list.add("set");
                             break;
                         case "pmgroup":
-                            if ("set".startsWith(args[1].toLowerCase())) {
-                                list.add("set");
-                            }
-                            if ("add".startsWith(args[1].toLowerCase())) {
-                                list.add("add");
-                            }
-                            if ("remove".startsWith(args[1].toLowerCase())) {
-                                list.add("remove");
-                            }
+                            startCheck(pmgroupArgs, args[1], list);
                             break;
                         case "selector":
-                            if ("set".startsWith(args[1].toLowerCase())) {
-                                list.add("set");
-                            }
-                            if ("remove".startsWith(args[1].toLowerCase())) {
-                                list.add("remove");
-                            }
-                            if ("list".startsWith(args[1].toLowerCase())) {
-                                list.add("list");
-                            }
+                            startCheck(selectorArgs, args[1], list);
                             break;
                         case "space":
                         case "copy":
                             startCheck(world, args[1], list);
                             break;
                         case "group":
-                            if ("search".startsWith(args[1].toLowerCase())) {
-                                list.add("search");
-                            }
-                            if ("add".startsWith(args[1].toLowerCase())) {
-                                list.add("add");
-                            }
-                            if ("remove".startsWith(args[1].toLowerCase())) {
-                                list.add("remove");
-                            }
-                            if ("create".startsWith(args[1].toLowerCase())) {
-                                list.add("create");
-                            }
+                            startCheck(groupArgs, args[1], list);
                             break;
                     }
                 }
@@ -117,15 +98,7 @@ public class SpaceTabCompleter implements TabCompleter {
                 }
                 else if (args.length == 4) {
                     if ((args[0].equals("permission") && args[1].equals("set")) || (args[0].equals("pmgroup") && (args[1].equals("set") || args[1].equals("add") || args[1].equals("remove"))) && NormalSpace.getWorldId(args[2]) != -1) {
-                        if ("now".startsWith(args[3].toLowerCase())) {
-                            list.add("now");
-                        }
-                        if ("all".startsWith(args[3].toLowerCase())) {
-                            list.add("all");
-                        }
-                        if ("new".startsWith(args[3].toLowerCase())) {
-                            list.add("new");
-                        }
+                        startCheck(timeArgs, args[3], list);
 
                         SpacePlayer spaceplayer = new SpacePlayer(player.getName());
                         for (String selector : spaceplayer.getSelectorsSet()) {
@@ -168,8 +141,9 @@ public class SpaceTabCompleter implements TabCompleter {
     }
 
     private static void startCheck(List<String> list, String arg, List<String> addto) {
+        String lowerArg = arg.toLowerCase();
         for (String string : list) {
-            if (string.startsWith(arg.toLowerCase())) {
+            if (string.startsWith(lowerArg)) {
                 addto.add(string);
             }
         }
