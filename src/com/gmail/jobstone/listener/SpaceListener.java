@@ -8,6 +8,7 @@ import java.util.Map;
 import com.gmail.jobstone.*;
 import com.gmail.jobstone.space.NormalSpace;
 import com.gmail.jobstone.space.SpaceGroup;
+import com.gmail.jobstone.space.SpaceGroupManager;
 import com.gmail.jobstone.space.SpaceManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -677,7 +678,7 @@ public class SpaceListener implements Listener {
 		for (int i = 1; i < 4; i++) {
 			for (String s : space.group(i)) {
 				if (s.startsWith(">")) {
-					SpaceGroup group = new SpaceGroup(s.substring(1));
+					SpaceGroup group = SpaceGroupManager.getGroup(s.substring(1));
 					if (group.exists() && group.contains(player))
 						return i;
 				}
