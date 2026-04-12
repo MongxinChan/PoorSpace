@@ -21,8 +21,9 @@ public class DefaultSpace extends Space {
             permission3 = config.getString("permission3").toCharArray();
             permission4 = config.getString("permission4").toCharArray();
         }
-        else
+        else {
             permission4 = new char[]{'0', '0', '0', '0', '0', '1', '1', '1', '1'};
+        }
     }
 
     public String player() {
