@@ -21,6 +21,20 @@ public class SpaceGroup {
         this.folder = new File(PoorSpace.plugin.getDataFolder(), "groups/"+name);
     }
 
+    private FileConfiguration cachedConfig = null;
+
+    public void invalidateCache() {
+        this.cachedConfig = null;
+    }
+
+    private FileConfiguration getConfig() {
+        if (cachedConfig == null) {
+            if (!this.exists()) return null;
+            cachedConfig = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
+        }
+        return cachedConfig;
+    }
+
     public boolean exists() {
         return this.folder.exists();
     }
@@ -33,7 +47,7 @@ public class SpaceGroup {
 
     public boolean contains(String player) {
         if (this.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
+            FileConfiguration config = getConfig();
             return config.getString("owner").equals(player) || config.getStringList("ops").contains(player) || config.getStringList("members").contains(player);
         }
         else
@@ -43,7 +57,7 @@ public class SpaceGroup {
 
     public List<String> getMembers() {
         if (this.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
+            FileConfiguration config = getConfig();
             return config.getStringList("members");
         }
         else
@@ -101,6 +115,7 @@ public class SpaceGroup {
             config.set("members", members);
             try {
                 config.save(file);
+                SpaceGroupManager.invalidate(this.name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -110,7 +125,7 @@ public class SpaceGroup {
 
     public List<String> getOps() {
         if (this.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
+            FileConfiguration config = getConfig();
             return config.getStringList("ops");
         }
         else
@@ -129,6 +144,7 @@ public class SpaceGroup {
             config.set("ops", ops);
             try {
                 config.save(file);
+                SpaceGroupManager.invalidate(this.name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -147,6 +163,7 @@ public class SpaceGroup {
             config.set("members", members);
             try {
                 config.save(file);
+                SpaceGroupManager.invalidate(this.name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -165,6 +182,7 @@ public class SpaceGroup {
             player.quitGroup(this.name);
             try {
                 config.save(file);
+                SpaceGroupManager.invalidate(this.name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -178,6 +196,7 @@ public class SpaceGroup {
                 player.quitGroup(this.name);
                 try {
                     config.save(file);
+                SpaceGroupManager.invalidate(this.name);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -210,6 +229,7 @@ public class SpaceGroup {
             config.set("ops", ops);
             try {
                 config.save(file);
+                SpaceGroupManager.invalidate(this.name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -219,7 +239,7 @@ public class SpaceGroup {
 
     public String getOwner() {
         if (this.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
+            FileConfiguration config = getConfig();
             return config.getString("owner");
         }
         else
@@ -237,6 +257,7 @@ public class SpaceGroup {
             config.set("owner", name);
             try {
                 config.save(file);
+                SpaceGroupManager.invalidate(this.name);
             } catch (IOException e) {
                 e.printStackTrace();
             }
