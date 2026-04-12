@@ -98,19 +98,22 @@ public abstract class Space {
                 int repeat = 0;
                 int size = names.size();
                 boolean[] exists = new boolean[size];
-                for (int i = 0; i < size; ++i)
+                for (int i = 0; i < size; ++i) {
                     exists[i] = false;
+                }
                 for (int i = 0; i < size; ++i) {
                     if (original.contains(names.get(i))) {
                         repeat++;
                         exists[i] = true;
                     }
                 }
-                if (names.size() + original.size() - repeat > 10)
+                if (names.size() + original.size() - repeat > 10) {
                     return 2;
+                }
                 for (int i = 0; i < size; i++) {
-                    if (!exists[i])
+                    if (!exists[i]) {
                         original.add(names.get(i));
+                    }
                 }
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("group" + group, original);
@@ -148,11 +151,13 @@ public abstract class Space {
             case 4:
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 char[] original = this.permission(i);
-                if (original.length != pm.length)
+                if (original.length != pm.length) {
                     return;
+                }
                 for (int j = 0; j < original.length; ++j) {
-                    if (pm[j] != '-')
+                    if (pm[j] != '-') {
                         original[j] = pm[j];
+                    }
                 }
                 config.set("permission" + i, String.valueOf(original));
                 this.persistToDiskAsync(config);

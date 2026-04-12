@@ -62,25 +62,29 @@ public class SpaceOpen {
 	
 	private static void subOpenWorld(Player player, List<String> list, String w, Material material, int page, int world) {
 		int totalpage = (list.size()-1)/45+1;
-		if (totalpage < 1)
-			totalpage = 1;
+		if (totalpage < 1) {
+            totalpage = 1;
+        }
 		int imax;
-		if (page > totalpage)
-			page = totalpage;
-		else if (page < 1)
-			page = 1;
+		if (page > totalpage) {
+            page = totalpage;
+        } else if (page < 1) {
+            page = 1;
+        }
 		
 		Inventory inv = Bukkit.getServer().createInventory(null, 54, "§1PoorSpace――个人："+w+" 页数："+page+"/"+totalpage);
 		if (page < totalpage) {
 			imax = page*45;
 			inv.setItem(53, newItem(Material.ARROW, "§a§l下一页"));
-			if (page > 1)
-				inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+			if (page > 1) {
+                inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+            }
 		}
 		else {
 			imax = list.size();
-			if (page > 1)
-				inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+			if (page > 1) {
+                inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+            }
 		}
 		
 		ArrayList<String> lore = new ArrayList<String>();
@@ -192,10 +196,11 @@ public class SpaceOpen {
 		if (world == 0) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(SpacePlayer.getWorldFile(player.getName(), 0));
 			List<String> list = config.getStringList("list");
-			if (list.isEmpty())
-				costs = "§m"+cost+"§e0";
-			else if (list.size() < 4)
-				costs = "§m"+cost+"§e"+(cost-40);
+			if (list.isEmpty()) {
+                costs = "§m"+cost+"§e0";
+            } else if (list.size() < 4) {
+                costs = "§m"+cost+"§e"+(cost-40);
+            }
 				
 		}
 		if (space.owner() == null) {
@@ -252,10 +257,11 @@ public class SpaceOpen {
 		if (world == 0) {
 			FileConfiguration config = YamlConfiguration.loadConfiguration(SpacePlayer.getWorldFile(player.getName(), 0));
 			List<String> list = config.getStringList("list");
-			if (list.isEmpty())
-				costs = "§m"+cost+"§e0";
-			else if (list.size() < 4)
-				costs = "§m"+cost+"§e"+(cost-40);
+			if (list.isEmpty()) {
+                costs = "§m"+cost+"§e0";
+            } else if (list.size() < 4) {
+                costs = "§m"+cost+"§e"+(cost-40);
+            }
 				
 		}
 		lore.add("§e点击确认花费"+costs+"购买该空间！");
@@ -331,8 +337,9 @@ public class SpaceOpen {
 		ItemMeta onmeta = on.getItemMeta();
 		lore.clear();
 		boolean owned = NormalSpace.isOwned(id, world);
-		if (owned && space.owner().equals(player.getName()))
-			lore.add("§e点击关闭该项");
+		if (owned && space.owner().equals(player.getName())) {
+            lore.add("§e点击关闭该项");
+        }
 		onmeta.setDisplayName("§a§l当前状态：开启");
 		onmeta.setLore(lore);
 		on.setItemMeta(onmeta);
@@ -341,8 +348,9 @@ public class SpaceOpen {
 		ItemStack off = new ItemStack(Material.GRAY_DYE);
 		ItemMeta offmeta = off.getItemMeta();
 		lore.clear();
-		if (owned && space.owner().equals(player.getName()))
-			lore.add("§e点击开启该项");
+		if (owned && space.owner().equals(player.getName())) {
+            lore.add("§e点击开启该项");
+        }
 		offmeta.setDisplayName("§4§l当前状态：关闭");
 		offmeta.setLore(lore);
 		off.setItemMeta(offmeta);
@@ -350,15 +358,17 @@ public class SpaceOpen {
 		ItemStack item;
 		for(int j = 0; j < m; j++) {
 			
-			if (pm[j] == '0')
-				item = off;
-			else
-				item = on;
+			if (pm[j] == '0') {
+                item = off;
+            } else {
+                item = on;
+            }
 			
-			if (j < 5)
-				inv.setItem(9+j*2, item);
-			else
-				inv.setItem(17+j*2, item);
+			if (j < 5) {
+                inv.setItem(9+j*2, item);
+            } else {
+                inv.setItem(17+j*2, item);
+            }
 			
 		}
 		
@@ -403,8 +413,9 @@ public class SpaceOpen {
 					if (NormalSpace.isOwned(spaceid, world)) {
 						NormalSpace space = new NormalSpace(spaceid, world);
 						owner = " "+space.owner();
-						if (material.equals(Material.PAPER))
-							material = Material.MAP;
+						if (material.equals(Material.PAPER)) {
+                            material = Material.MAP;
+                        }
 					}
 					lore.add("§7空间"+spaceid+"（"+spaceY+owner+"）");
 					
@@ -450,8 +461,9 @@ public class SpaceOpen {
 
 		List<String> groups = new ArrayList<>();
 		for (String group : SpaceGroup.getAllGroups()) {
-			if (group.contains(s))
-				groups.add(group);
+			if (group.contains(s)) {
+                groups.add(group);
+            }
 		}
 
 		SpaceOpen.searchResults.put(player.getName(), groups);
@@ -470,25 +482,29 @@ public class SpaceOpen {
 
 		List<String> groups = SpaceOpen.searchResults.get(player.getName());
 		int totalpage = (groups.size()-1)/45+1;
-		if (totalpage < 1)
-			totalpage = 1;
+		if (totalpage < 1) {
+            totalpage = 1;
+        }
 		int imax;
-		if (page > totalpage)
-			page = totalpage;
-		else if (page < 1)
-			page = 1;
+		if (page > totalpage) {
+            page = totalpage;
+        } else if (page < 1) {
+            page = 1;
+        }
 
 		Inventory inv = Bukkit.getServer().createInventory(null, 54, "§1PoorSpace――搜索群组 第"+page+"/"+totalpage+"页");
 		if (page < totalpage) {
 			imax = page*45;
 			inv.setItem(53, newItem(Material.ARROW, "§a§l下一页"));
-			if (page > 1)
-				inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+			if (page > 1) {
+                inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+            }
 		}
 		else {
 			imax = groups.size();
-			if (page > 1)
-				inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+			if (page > 1) {
+                inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+            }
 		}
 
 		int istart = (page-1)*45+1;
@@ -510,25 +526,29 @@ public class SpaceOpen {
             List<String> members = group.getMembers();
             int totalsize = ops.size()+members.size();
             int totalpage = (totalsize+35)/36;
-            if (totalpage < 1)
-            	totalpage = 1;
+            if (totalpage < 1) {
+                totalpage = 1;
+            }
             int imax;
-            if (page > totalpage)
+            if (page > totalpage) {
                 page = totalpage;
-            else if (page < 1)
+            } else if (page < 1) {
                 page = 1;
+            }
 
             Inventory inv = Bukkit.getServer().createInventory(null, 54, "§1PoorSpace――群组："+name+" 第"+page+"/"+totalpage+"页");
 			if (page < totalpage) {
 				imax = page*36;
 				inv.setItem(53, newItem(Material.ARROW, "§a§l下一页"));
-				if (page > 1)
-					inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+				if (page > 1) {
+                    inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+                }
 			}
 			else {
 				imax = totalsize;
-				if (page > 1)
-					inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+				if (page > 1) {
+                    inv.setItem(45, newItem(Material.ARROW, "§a§l上一页"));
+                }
 			}
 
 			int istart = (page-1)*36;
@@ -546,8 +566,9 @@ public class SpaceOpen {
                         meta.setLore(lore);
                         lore.clear();
                     }
-                    else
+                    else {
                         meta.setLore(lore);
+                    }
                     item.setItemMeta(meta);
 
                 }
@@ -560,8 +581,9 @@ public class SpaceOpen {
                         meta.setLore(lore);
                         lore.clear();
                     }
-                    else
+                    else {
                         meta.setLore(lore);
+                    }
                     item.setItemMeta(meta);
 
                 }

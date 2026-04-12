@@ -25,16 +25,18 @@ public class SpacePlayer extends SpaceOwner {
 
     public Set<String> getSelectorsSet() {
         FileConfiguration config = YamlConfiguration.loadConfiguration(getSettingsFile());
-        if (config.contains("selectors"))
+        if (config.contains("selectors")) {
             return config.getConfigurationSection("selectors").getKeys(false);
-        else
+        } else {
             return new HashSet<>();
+        }
     }
 
     public boolean containsSelector(String selector) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(getSettingsFile());
-        if (config.contains("selectors."+selector, false))
+        if (config.contains("selectors."+selector, false)) {
             return true;
+        }
         return false;
     }
 
@@ -50,16 +52,20 @@ public class SpacePlayer extends SpaceOwner {
     }
 
     public OperationResult<List<String>> changeSpacePermissionGroup(OperationType operation, int world, String selector, int groupId, List<String> list) {
-        if (world < 0 || world > 3)
+        if (world < 0 || world > 3) {
             return new OperationResult<>("该世界不存在！");
-        if (groupId < 1 || groupId > 3)
+        }
+        if (groupId < 1 || groupId > 3) {
             return new OperationResult<>("无效的权限组编号！");
+        }
         OperationResult<List<Space>> result = this.resolveSelector(world, selector);
-        if (!result.success())
+        if (!result.success()) {
             return new OperationResult<>("空间选择器不合法！");
+        }
         List<Space> spaces = result.getContent();
-        if (0 == spaces.size())
+        if (0 == spaces.size()) {
             return new OperationResult<>("空间选择器未找到任何已拥有的空间！");
+        }
         List<String> spaceList = new ArrayList<>();
         switch (operation) {
             case SET:
@@ -85,18 +91,23 @@ public class SpacePlayer extends SpaceOwner {
     }
 
     public OperationResult<List<String>> changeSpacePermission(OperationType operation, int world, String selector, int groupId, String permission) {
-        if (world < 0 || world > 3)
+        if (world < 0 || world > 3) {
             return new OperationResult<>("该世界不存在！");
-        if (groupId < 1 || groupId > 4)
+        }
+        if (groupId < 1 || groupId > 4) {
             return new OperationResult<>("无效的权限组编号！");
+        }
         OperationResult<List<Space>> result = this.resolveSelector(world, selector);
-        if (!result.success())
+        if (!result.success()) {
             return new OperationResult<>("空间选择器不合法！");
+        }
         List<Space> spaces = result.getContent();
-        if (0 == spaces.size())
+        if (0 == spaces.size()) {
             return new OperationResult<>("空间选择器未找到任何已拥有的空间！");
-        if (permission.length() != permissionLength(groupId) || !isPermissionLegal(permission))
+        }
+        if (permission.length() != permissionLength(groupId) || !isPermissionLegal(permission)) {
             return new OperationResult<>("无效的权限设置！");
+        }
         List<String> spaceList = new ArrayList<>();
         switch (operation) {
             case SET:
@@ -112,15 +123,18 @@ public class SpacePlayer extends SpaceOwner {
     }
 
     public OperationResult<Pair<List<String>, Integer>> copySpaces(int world, String selector, String creativeSpaceId, int amount) {
-        if (world < 0 || world > 3)
+        if (world < 0 || world > 3) {
             return new OperationResult<>("该世界不存在！");
+        }
         OperationResult<Pair<List<String>, Position2D>> result = this.resolveCopySelector(world, selector);
-        if (!result.success())
+        if (!result.success()) {
             return new OperationResult<>(result.getMessage());
+        }
         Pair<List<String>, Position2D> pair = result.getContent();
         List<String> spaces = pair.first;
-        if (0 == spaces.size())
+        if (0 == spaces.size()) {
             return new OperationResult<>("空间选择器未找到任何已拥有的空间！");
+        }
 
         Position2D basePosition = pair.second;
         Position2D basePositionCreative = NormalSpace.getPosition2D(creativeSpaceId);
@@ -139,28 +153,33 @@ public class SpacePlayer extends SpaceOwner {
         }
         int size = originalPositions.size();
         int cost = world == 3 ? 0 : size;
-        if (cost > amount)
+        if (cost > amount) {
             return new OperationResult<>("主手上的穷王之尘数量不足，共需要 " + cost + " 个。");
+        }
 
-        if (!NormalSpace.isSpaceLegal(creativeSpaceId, 3))
+        if (!NormalSpace.isSpaceLegal(creativeSpaceId, 3)) {
             return new OperationResult<>("创造界空间id不合法！");
+        }
         World originalWorld = Bukkit.getWorld(Space.getWorldName(world));
         World copyWorld = Bukkit.getWorld("creative");
 
         for (int i = 0; i < size; ++i) {
             Position2D copyPosition = copyPositions.get(i);
             NormalSpace creativeSpace = new NormalSpace(copyPosition.toPosition3D(0), 3);
-            if (creativeSpace.owner() == null || !creativeSpace.owner().equals(this.name))
+            if (creativeSpace.owner() == null || !creativeSpace.owner().equals(this.name)) {
                 return new OperationResult<>("未拥有创造空间 " + creativeSpace.id() + " ！");
+            }
             Position2D originalPosition = originalPositions.get(i);
             if (!originalWorld.isChunkGenerated(originalPosition.x, originalPosition.y)
-                    || !copyWorld.isChunkGenerated(copyPosition.x, copyPosition.y))
+                    || !copyWorld.isChunkGenerated(copyPosition.x, copyPosition.y)) {
                 return new OperationResult<>("涉及区块未生成！");
+            }
         }
 
         List<ChunkSnapshot> originalChunks = new ArrayList<>();
-        for (Position2D originalPosition : originalPositions)
+        for (Position2D originalPosition : originalPositions) {
             originalChunks.add(originalWorld.getChunkAt(originalPosition.x, originalPosition.y).getChunkSnapshot());
+        }
 
         for (int k = 0; k < size; ++k) {
             Position2D originalPosition = originalPositions.get(k);
@@ -215,18 +234,22 @@ public class SpacePlayer extends SpaceOwner {
     public OperationResult<List<Space>> resolveSelector(int world, String selector) {
         File settings = this.getSettingsFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(settings);
-        if (config.contains("selectors." + selector))
+        if (config.contains("selectors." + selector)) {
             selector = config.getString("selectors." + selector);
+        }
 
         List<Space> spaces = new ArrayList<>();
         if (selector.contains("+")) {
             String[] subSelectors = selector.split("\\+");
-            for (String subSelector : subSelectors)
-                if (!this.resolveSingleSelector(world, subSelector, spaces).success())
+            for (String subSelector : subSelectors) {
+                if (!this.resolveSingleSelector(world, subSelector, spaces).success()) {
                     return new OperationResult<>("Illegal Selector");
+                }
+            }
         }
-        else if (!this.resolveSingleSelector(world, selector, spaces).success())
+        else if (!this.resolveSingleSelector(world, selector, spaces).success()) {
             return new OperationResult<>("Illegal Selector");
+        }
         return new OperationResult<>(spaces);
     }
 
@@ -235,15 +258,17 @@ public class SpacePlayer extends SpaceOwner {
             case "all": {
                 for (String spaceId : this.getSpaceList(world)) {
                     NormalSpace space = new NormalSpace(spaceId, world);
-                    if (!list.contains(space))
+                    if (!list.contains(space)) {
                         list.add(space);
+                    }
                 }
                 return OperationResult.SUCCESS;
             }
             case "new": {
                 DefaultSpace space = this.getDefaultSpace(world);
-                if (!list.contains(space))
+                if (!list.contains(space)) {
                     list.add(space);
+                }
                 return OperationResult.SUCCESS;
             }
             default: {
@@ -279,16 +304,18 @@ public class SpacePlayer extends SpaceOwner {
                             int z = Integer.parseInt(id.substring(id.indexOf(".")+1, id.lastIndexOf(".")));
                             int y = Integer.parseInt(id.substring(id.lastIndexOf(".")+1));
                             NormalSpace space = new NormalSpace(id, world);
-                            if (x >= x1 && x <= x2 && y >= y1 && y <= y2 && z >= z1 && z <= z2 && !list.contains(space))
+                            if (x >= x1 && x <= x2 && y >= y1 && y <= y2 && z >= z1 && z <= z2 && !list.contains(space)) {
                                 list.add(space);
+                            }
                         }
                         return OperationResult.SUCCESS;
                     }
                 }
                 else if (NormalSpace.isSpaceLegal(selector, world)){
                     NormalSpace space = new NormalSpace(selector, world);
-                    if (space.owner() != null && space.owner().equals(this.name) && !list.contains(space))
+                    if (space.owner() != null && space.owner().equals(this.name) && !list.contains(space)) {
                         list.add(space);
+                    }
                     return OperationResult.SUCCESS;
                 }
             }
@@ -299,8 +326,9 @@ public class SpacePlayer extends SpaceOwner {
     private OperationResult<Pair<List<String>, Position2D>> resolveCopySelector(int world, String selector) {
         File settings = this.getSettingsFile();
         FileConfiguration config = YamlConfiguration.loadConfiguration(settings);
-        if (config.contains("selectors." + selector))
+        if (config.contains("selectors." + selector)) {
             selector = config.getString("selectors." + selector);
+        }
 
         List<String> spaces = new ArrayList<>();
         if (selector.contains("~")) {
@@ -331,21 +359,24 @@ public class SpacePlayer extends SpaceOwner {
                     z2 = t;
                 }
 
-                if ((x2 - x1 + 1) * (z2 - z1 + 1) > 9)
+                if ((x2 - x1 + 1) * (z2 - z1 + 1) > 9) {
                     return new OperationResult<>("复制选择器区块数不得大于 9 个！");
+                }
 
                 for (String id : this.getSpaceList(world)) {
                     Position3D pos = NormalSpace.getPosition3D(id);
-                    if (pos.x >= x1 && pos.x <= x2 && pos.z >= y1 && pos.z <= y2 && pos.y >= z1 && pos.y <= z2)
+                    if (pos.x >= x1 && pos.x <= x2 && pos.z >= y1 && pos.z <= y2 && pos.y >= z1 && pos.y <= z2) {
                         spaces.add(id);
+                    }
                 }
                 return new OperationResult<>(new Pair<>(spaces, new Position2D(x1, z1)));
             }
         }
         else if (NormalSpace.isSpaceLegal(selector, world)){
             NormalSpace space = new NormalSpace(selector, world);
-            if (space.owner() != null && space.owner().equals(this.name))
+            if (space.owner() != null && space.owner().equals(this.name)) {
                 spaces.add(selector);
+            }
             return new OperationResult<>(new Pair<>(spaces, NormalSpace.getPosition3D(selector).toPosition2D()));
         }
         return new OperationResult<>("空间选择器不合法！");
@@ -361,14 +392,16 @@ public class SpacePlayer extends SpaceOwner {
             }
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < subSelectors.length; ++i) {
-                if (i != 0)
+                if (i != 0) {
                     sb.append('+');
+                }
                 sb.append(subSelectors[i]);
             }
             return sb.toString();
         }
-        else
+        else {
             return selector.equals("now") ? NormalSpace.getSpaceId(player.getLocation()) : selector;
+        }
     }
 
     public List<String> getGroups() {
@@ -376,8 +409,9 @@ public class SpacePlayer extends SpaceOwner {
         if (config.contains("groups")) {
             return config.getStringList("groups");
         }
-        else
+        else {
             return new ArrayList<>();
+        }
     }
 
     public void joinGroup(String group) {

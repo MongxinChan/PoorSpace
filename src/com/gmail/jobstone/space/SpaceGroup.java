@@ -29,7 +29,9 @@ public class SpaceGroup {
 
     private FileConfiguration fetchLocalDataFile() {
         if (cachedConfig == null) {
-            if (!this.exists()) return null;
+            if (!this.exists()) {
+                return null;
+            }
             cachedConfig = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
         }
         return cachedConfig;
@@ -50,8 +52,9 @@ public class SpaceGroup {
             FileConfiguration config = fetchLocalDataFile();
             return config.getString("owner").equals(player) || config.getStringList("ops").contains(player) || config.getStringList("members").contains(player);
         }
-        else
+        else {
             return false;
+        }
     }
 
 
@@ -60,8 +63,9 @@ public class SpaceGroup {
             FileConfiguration config = fetchLocalDataFile();
             return config.getStringList("members");
         }
-        else
+        else {
             return null;
+        }
     }
 
 
@@ -75,14 +79,14 @@ public class SpaceGroup {
         for (String name : names) {
             if (!(owner.equals(name) || ops.contains(name) || members.contains(name))) {
                 SpacePlayer player = new SpacePlayer(name);
-                if (player.exists())
+                if (player.exists()) {
                     if (player.getGroups().size() < 9) {
                         player.joinGroup(this.name);
                         members.add(name);
-                    }
-                    else
+                    } else {
                         fails.add(name);
-                else {
+                    }
+                } else {
                     members.add(name);
                     player.createFiles();
                     player.joinGroup(this.name);
@@ -107,8 +111,9 @@ public class SpaceGroup {
             for (String name : names) {
                 if (members.contains(name)) {
                     SpacePlayer player = new SpacePlayer(name);
-                    if (player.exists())
+                    if (player.exists()) {
                         player.quitGroup(this.name);
+                    }
                 }
             }
             members.removeAll(names);
@@ -128,8 +133,9 @@ public class SpaceGroup {
             FileConfiguration config = fetchLocalDataFile();
             return config.getStringList("ops");
         }
-        else
+        else {
             return null;
+        }
     }
 
 
@@ -214,13 +220,15 @@ public class SpaceGroup {
             for (String name : names) {
                 if (members.contains(name)) {
                     SpacePlayer player = new SpacePlayer(name);
-                    if (player.exists())
+                    if (player.exists()) {
                         player.quitGroup(this.name);
+                    }
                 }
                 if (ops.contains(name)) {
                     SpacePlayer player = new SpacePlayer(name);
-                    if (player.exists())
+                    if (player.exists()) {
                         player.quitGroup(this.name);
+                    }
                 }
             }
             members.removeAll(names);
@@ -242,8 +250,9 @@ public class SpaceGroup {
             FileConfiguration config = fetchLocalDataFile();
             return config.getString("owner");
         }
-        else
+        else {
             return null;
+        }
     }
 
 
@@ -266,20 +275,22 @@ public class SpaceGroup {
 
 
     public GroupRole getRole(String name) {
-        if (this.getOwner().equals(name))
+        if (this.getOwner().equals(name)) {
             return GroupRole.OWNER;
-        else if (this.getOps().contains(name))
+        } else if (this.getOps().contains(name)) {
             return GroupRole.OP;
-        else if (this.getMembers().contains(name))
+        } else if (this.getMembers().contains(name)) {
             return GroupRole.MEMBER;
-        else
+        } else {
             return GroupRole.NON;
+        }
     }
 
 
     public boolean create(Material material, String owner) {
-        if (this.exists())
+        if (this.exists()) {
             return false;
+        }
         this.folder.mkdirs();
 
         File file = new File(this.folder, "data.yml");
@@ -318,8 +329,9 @@ public class SpaceGroup {
 
     public ItemStack getDoor() {
 
-        if (!this.exists())
+        if (!this.exists()) {
             return null;
+        }
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
         ItemStack item = new ItemStack(Material.valueOf(config.getString("material")));
         return item;
@@ -329,8 +341,9 @@ public class SpaceGroup {
 
     public ItemStack buildDisplayItem() {
 
-        if (!this.exists())
+        if (!this.exists()) {
             return null;
+        }
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
         ItemStack item = new ItemStack(Material.valueOf(config.getString("material")));
         ItemMeta meta = item.getItemMeta();
@@ -340,27 +353,31 @@ public class SpaceGroup {
         List<String> ops = config.getStringList("ops");
         List<String> members = config.getStringList("members");
         int total = ops.size()+members.size();
-        if (total == 0)
+        if (total == 0) {
             lore.add("§a该群组暂无成员");
-        else {
+        } else {
             lore.add("§a包括：");
             if (total <= 10) {
-                for (String member : ops)
+                for (String member : ops) {
                     lore.add("§a" + member + "§b[管理员]");
-                for (String member : members)
+                }
+                for (String member : members) {
                     lore.add("§a" + member);
+                }
             }
             else {
                 int i = 0;
                 for (String member : ops) {
-                    if (i == 10)
+                    if (i == 10) {
                         break;
+                    }
                     lore.add("§a" + member + "§b[管理员]");
                     i++;
                 }
                 for (String member : members) {
-                    if (i == 10)
+                    if (i == 10) {
                         break;
+                    }
                     lore.add("§a" + member);
                     i++;
                 }
