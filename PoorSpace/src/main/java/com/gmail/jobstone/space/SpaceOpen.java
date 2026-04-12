@@ -30,7 +30,7 @@ public class SpaceOpen {
 		
 		ArrayList<String> lore = new ArrayList<>();
 		lore.add("§a点击查看您在主世界拥有的空间");
-		pinv.setItem(2, newItem(Material.GRASS_BLOCK, "§a§l主世界", lore));
+		pinv.setItem(2, newItem(Material.GRASS, "§a§l主世界", lore));
 		lore.clear();
 		lore.add("§a点击查看您在下界拥有的空间");
 		pinv.setItem(3, newItem(Material.NETHERRACK, "§a§l下界", lore));
