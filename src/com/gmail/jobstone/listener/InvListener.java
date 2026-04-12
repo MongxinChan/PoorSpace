@@ -24,6 +24,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 public class InvListener implements Listener {
 	
 	private final PoorSpace plugin;
+
+	private static final String[] WORLD_NAMES = {"主世界", "下界", "末地", "创造界", "小游戏界"};
+	private static final String[] BUKKIT_WORLD_NAMES = {"world", "world_nether", "world_the_end", "creative", "minigame"};
 	
 	public InvListener (PoorSpace plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -62,454 +65,24 @@ public class InvListener implements Listener {
 				}
 			}
 			
-			else if (window.startsWith("个人：主世界")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-						
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						if (click.startsWith("§a§l空间")) {
-							String id = click.substring(6);
-							SpaceOpen.openSpace(player, id, 0);
-						}
-						else if (click.equals("§a§l下一页")) {
-							int page = Integer.parseInt(window.substring(10, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 0, page+1);
-						}
-						else if (click.equals("§a§l上一页")) {
-							int page = Integer.parseInt(window.substring(10, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 0, page-1);
-						}
-						else if (click.equals("§a§l返回")) {
-							SpaceOpen.openPlayer(player);
-						}
-						else if (click.equals("§a§l主世界")) {
-							Location loc = Bukkit.getWorld("world").getSpawnLocation();
-							SpaceOpen.openNearbyChunks(player, loc.getChunk().getX()+"."+loc.getChunk().getZ(), NormalSpace.getWorldId(loc));
-						}
-						
-					}
+			else if (window.startsWith("个人：")) {
+				int worldId = resolveWorldId(window.substring(3), "");
+				if (worldId != -1) {
+					handleWorldListClick(e, window, worldId);
 				}
 			}
 			
-			else if (window.startsWith("个人：下界")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-						
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						if (click.startsWith("§a§l空间")) {
-							String id = click.substring(6);
-							SpaceOpen.openSpace(player, id, 1);
-						}
-						else if (click.equals("§a§l下一页")) {
-							int page = Integer.parseInt(window.substring(9, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 1, page+1);
-						}
-						else if (click.equals("§a§l上一页")) {
-							int page = Integer.parseInt(window.substring(9, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 1, page-1);
-						}
-						else if (click.equals("§a§l返回")) {
-							SpaceOpen.openPlayer(player);
-						}
-						else if (click.equals("§a§l下界")) {
-							Location loc = Bukkit.getWorld("world_nether").getSpawnLocation();
-							SpaceOpen.openNearbyChunks(player, loc.getChunk().getX()+"."+loc.getChunk().getZ(), NormalSpace.getWorldId(loc));
-						}
-						
-					}
-				}
-			}
-			
-			else if (window.startsWith("个人：末地")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-						
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						if (click.startsWith("§a§l空间")) {
-							String id = click.substring(6);
-							SpaceOpen.openSpace(player, id, 2);
-						}
-						else if (click.equals("§a§l下一页")) {
-							int page = Integer.parseInt(window.substring(9, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 2, page+1);
-						}
-						else if (click.equals("§a§l上一页")) {
-							int page = Integer.parseInt(window.substring(9, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 2, page-1);
-						}
-						else if (click.equals("§a§l返回")) {
-							SpaceOpen.openPlayer(player);
-						}
-						else if (click.equals("§a§l末地")) {
-							Location loc = Bukkit.getWorld("world_the_end").getSpawnLocation();
-							SpaceOpen.openNearbyChunks(player, loc.getChunk().getX()+"."+loc.getChunk().getZ(), NormalSpace.getWorldId(loc));
-						}
-						
-					}
-				}
-			}
-			
-			else if (window.startsWith("个人：创造界")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-						
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						if (click.startsWith("§a§l空间")) {
-							String id = click.substring(6);
-							SpaceOpen.openSpace(player, id, 3);
-						}
-						else if (click.equals("§a§l下一页")) {
-							int page = Integer.parseInt(window.substring(10, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 3, page+1);
-						}
-						else if (click.equals("§a§l上一页")) {
-							int page = Integer.parseInt(window.substring(10, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 3, page-1);
-						}
-						else if (click.equals("§a§l返回")) {
-							SpaceOpen.openPlayer(player);
-						}
-						else if (click.equals("§a§l创造界")) {
-							Location loc = Bukkit.getWorld("creative").getSpawnLocation();
-							SpaceOpen.openNearbyChunks(player, loc.getChunk().getX()+"."+loc.getChunk().getZ(), NormalSpace.getWorldId(loc));
-						}
-						
-					}
-				}
-			}
-			
-			else if (window.startsWith("个人：小游戏界")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-						
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						if (click.startsWith("§a§l空间")) {
-							String id = click.substring(6);
-							SpaceOpen.openSpace(player, id, 4);
-						}
-						else if (click.equals("§a§l下一页")) {
-							int page = Integer.parseInt(window.substring(11, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 4, page+1);
-						}
-						else if (click.equals("§a§l上一页")) {
-							int page = Integer.parseInt(window.substring(11, window.lastIndexOf("/")));
-							SpaceOpen.openWorld(player, 4, page-1);
-						}
-						else if (click.equals("§a§l返回")) {
-							SpaceOpen.openPlayer(player);
-						}
-						else if (click.equals("§a§l小游戏界")) {
-							Location loc = Bukkit.getWorld("minigame").getSpawnLocation();
-							SpaceOpen.openNearbyChunks(player, loc.getChunk().getX()+"."+loc.getChunk().getZ(), NormalSpace.getWorldId(loc));
-						}
-						
-					}
-				}
-			}
-			
-			else if (window.startsWith("主世界空间")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (window.contains("权限组")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							int j = slot(e.getRawSlot());
-							String id = window.substring(5, window.indexOf("权限组"));
-							int group = Integer.parseInt(window.substring(window.length()-1));
-							permissionClick(player, id, j, 0, group);
-							
-						}
-					}
-					else if (window.contains("购买")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(5, window.indexOf("购买"));
-							buyClick(player, id, click, 0);
-							
-						}
-					}
-					else if (window.contains("放弃")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(5, window.indexOf("放弃"));
-							giveupClick(player, id, click, 0);
-							
-						}
-					}
-					else {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							spaceClick(player, click, window.substring(5), 0, "主世界");
-							
-						}
-					}
-				}
-			}
-			
-			else if (window.startsWith("下界空间")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (window.contains("权限组")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							int j = slot(e.getRawSlot());
-							String id = window.substring(4, window.indexOf("权限组"));
-							int group = Integer.parseInt(window.substring(window.length()-1));
-							permissionClick(player, id, j, 1, group);
-							
-						}
-					}
-					else  if (window.contains("购买")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(4, window.indexOf("购买"));
-							buyClick(player, id, click, 1);
-							
-						}
-					}
-					else if (window.contains("放弃")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(4, window.indexOf("放弃"));
-							giveupClick(player, id, click, 1);
-							
-						}
-					}
-					else {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							spaceClick(player, click, window.substring(4), 1, "下界");
-							
-						}
-					}
-				}
-			}
-			
-			else if (window.startsWith("末地空间")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (window.contains("权限组")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							int j = slot(e.getRawSlot());
-							String id = window.substring(4, window.indexOf("权限组"));
-							int group = Integer.parseInt(window.substring(window.length()-1));
-							permissionClick(player, id, j, 2, group);
-							
-						}
-					}
-					else  if (window.contains("购买")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(4, window.indexOf("购买"));
-							buyClick(player, id, click, 2);
-							
-						}
-					}
-					else if (window.contains("放弃")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(4, window.indexOf("放弃"));
-							giveupClick(player, id, click, 2);
-							
-						}
-					}
-					else {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							spaceClick(player, click, window.substring(4), 2, "末地");
-							
-						}
-					}
-				}
-			}
-			
-			else if (window.startsWith("创造界空间")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (window.contains("权限组")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							int j = slot(e.getRawSlot());
-							String id = window.substring(5, window.indexOf("权限组"));
-							int group = Integer.parseInt(window.substring(window.length()-1));
-							permissionClick(player, id, j, 3, group);
-							
-						}
-					}
-					else  if (window.contains("购买")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(5, window.indexOf("购买"));
-							buyClick(player, id, click, 3);
-							
-						}
-					}
-					else if (window.contains("放弃")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(5, window.indexOf("放弃"));
-							giveupClick(player, id, click, 3);
-							
-						}
-					}
-					else {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							spaceClick(player, click, window.substring(5), 3, "创造界");
-							
-						}
-					}
-				}
-			}
-			
-			else if (window.startsWith("小游戏界空间")) {
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (window.contains("权限组")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							int j = slot(e.getRawSlot());
-							String id = window.substring(6, window.indexOf("权限组"));
-							int group = Integer.parseInt(window.substring(window.length()-1));
-							permissionClick(player, id, j, 4, group);
-							
-						}
-					}
-					else  if (window.contains("购买")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(6, window.indexOf("购买"));
-							buyClick(player, id, click, 4);
-							
-						}
-					}
-					else if (window.contains("放弃")) {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							String id = window.substring(6, window.indexOf("放弃"));
-							giveupClick(player, id, click, 4);
-							
-						}
-					}
-					else {
-						if (e.getClick().equals(ClickType.LEFT)) {
-							
-							String click = e.getCurrentItem().getItemMeta().getDisplayName();
-							spaceClick(player, click, window.substring(6), 4, "小游戏界");
-							
-						}
-					}
-				}
-			}
-			
-			else if (window.startsWith("主世界区块")) {
+			else {
+				int spaceWorldId = resolveWorldId(window, "空间");
+				int chunkWorldId = (spaceWorldId == -1) ? resolveWorldId(window, "区块") : -1;
 
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-							
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						String id = window.substring(5, window.indexOf("附近"));
-						nearbyClick(player, click, id, 0);
-						
-					}
-				}
-			}
-			
-			else if (window.startsWith("下界区块")) {
-
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-							
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						String id = window.substring(4, window.indexOf("附近"));
-						nearbyClick(player, click, id, 1);
-						
-					}
-				}
-			}
-			
-			else if (window.startsWith("末地区块")) {
-
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-							
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						String id = window.substring(4, window.indexOf("附近"));
-						nearbyClick(player, click, id, 2);
-						
-					}
-				}
-			}
-			
-			else if (window.startsWith("创造界区块")) {
-
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-							
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						String id = window.substring(5, window.indexOf("附近"));
-						nearbyClick(player, click, id, 3);
-						
-					}
+				if (spaceWorldId != -1) {
+					handleSpaceViewClick(e, window, spaceWorldId);
+				} else if (chunkWorldId != -1) {
+					handleChunkViewClick(e, window, chunkWorldId);
 				}
 
-			}
-			
-			else if (window.startsWith("小游戏界区块")) {
-
-				e.setCancelled(true);
-				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
-					Player player = (Player) e.getWhoClicked();
-					if (e.getClick().equals(ClickType.LEFT)) {
-							
-						String click = e.getCurrentItem().getItemMeta().getDisplayName();
-						String id = window.substring(6, window.indexOf("附近"));
-						nearbyClick(player, click, id, 4);
-						
-					}
-				}
-
-			}
-
-			else if (window.equals("个人群组")) {
+				else if (window.equals("个人群组")) {
 				e.setCancelled(true);
 				if (e.getRawSlot() < e.getInventory().getSize() && e.getCurrentItem()!= null && !e.getCurrentItem().getType().equals(Material.AIR)) {
 
@@ -672,9 +245,96 @@ public class InvListener implements Listener {
 
 				}
 			}
+			}
 		}
 	}
 	
+	private static int resolveWorldId(String text, String suffix) {
+		for (int i = 0; i < WORLD_NAMES.length; i++) {
+			if (text.startsWith(WORLD_NAMES[i] + suffix)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private void handleWorldListClick(InventoryClickEvent e, String window, int worldId) {
+		e.setCancelled(true);
+		if (e.getRawSlot() >= e.getInventory().getSize() || e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {
+			return;
+		}
+		Player player = (Player) e.getWhoClicked();
+		if (!e.getClick().equals(ClickType.LEFT)) {
+			return;
+		}
+		String click = e.getCurrentItem().getItemMeta().getDisplayName();
+		if (click.startsWith("§a§l空间")) {
+			SpaceOpen.openSpace(player, click.substring(6), worldId);
+		} else if (click.equals("§a§l下一页")) {
+			int pageStart = window.indexOf("页数：") + 3;
+			int page = Integer.parseInt(window.substring(pageStart, window.lastIndexOf("/")));
+			SpaceOpen.openWorld(player, worldId, page + 1);
+		} else if (click.equals("§a§l上一页")) {
+			int pageStart = window.indexOf("页数：") + 3;
+			int page = Integer.parseInt(window.substring(pageStart, window.lastIndexOf("/")));
+			SpaceOpen.openWorld(player, worldId, page - 1);
+		} else if (click.equals("§a§l返回")) {
+			SpaceOpen.openPlayer(player);
+		} else if (click.equals("§a§l" + WORLD_NAMES[worldId])) {
+			Location loc = Bukkit.getWorld(BUKKIT_WORLD_NAMES[worldId]).getSpawnLocation();
+			SpaceOpen.openNearbyChunks(player, loc.getChunk().getX() + "." + loc.getChunk().getZ(), NormalSpace.getWorldId(loc));
+		}
+	}
+
+	private void handleSpaceViewClick(InventoryClickEvent e, String window, int worldId) {
+		e.setCancelled(true);
+		if (e.getRawSlot() >= e.getInventory().getSize() || e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {
+			return;
+		}
+		Player player = (Player) e.getWhoClicked();
+		int idStart = window.indexOf("空间") + 2;
+
+		if (window.contains("权限组")) {
+			if (e.getClick().equals(ClickType.LEFT)) {
+				int j = slot(e.getRawSlot());
+				String id = window.substring(idStart, window.indexOf("权限组"));
+				int group = Integer.parseInt(window.substring(window.length() - 1));
+				permissionClick(player, id, j, worldId, group);
+			}
+		} else if (window.contains("购买")) {
+			if (e.getClick().equals(ClickType.LEFT)) {
+				String click = e.getCurrentItem().getItemMeta().getDisplayName();
+				String id = window.substring(idStart, window.indexOf("购买"));
+				buyClick(player, id, click, worldId);
+			}
+		} else if (window.contains("放弃")) {
+			if (e.getClick().equals(ClickType.LEFT)) {
+				String click = e.getCurrentItem().getItemMeta().getDisplayName();
+				String id = window.substring(idStart, window.indexOf("放弃"));
+				giveupClick(player, id, click, worldId);
+			}
+		} else {
+			if (e.getClick().equals(ClickType.LEFT)) {
+				String click = e.getCurrentItem().getItemMeta().getDisplayName();
+				spaceClick(player, click, window.substring(idStart), worldId, WORLD_NAMES[worldId]);
+			}
+		}
+	}
+
+	private void handleChunkViewClick(InventoryClickEvent e, String window, int worldId) {
+		e.setCancelled(true);
+		if (e.getRawSlot() >= e.getInventory().getSize() || e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)) {
+			return;
+		}
+		Player player = (Player) e.getWhoClicked();
+		if (e.getClick().equals(ClickType.LEFT)) {
+			String click = e.getCurrentItem().getItemMeta().getDisplayName();
+			int idStart = window.indexOf("区块") + 2;
+			String id = window.substring(idStart, window.indexOf("附近"));
+			nearbyClick(player, click, id, worldId);
+		}
+	}
+
 	private void spaceClick(Player player, String click, String id, int world, String w) {
 		if (click.startsWith("§a§l空间")) {
 			String spaceid = click.substring(6);
