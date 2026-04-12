@@ -85,7 +85,7 @@ public class NormalSpace extends Space {
     }
 
 
-    public ItemStack toItem() {
+    public ItemStack buildDisplayItem() {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
