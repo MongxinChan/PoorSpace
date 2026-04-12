@@ -45,7 +45,7 @@ public class SpaceListener implements Listener {
 		if (e.getEntity() instanceof Player) {
 			String player = ((Player)e.getEntity()).getName();
 			Location loc = e.getItem().getLocation();
-			if (!playerpm(player, loc, 6))
+			if (!validatePlayerPermission(player, loc, 6))
 				e.setCancelled(true);
 		}
 	}
@@ -54,7 +54,7 @@ public class SpaceListener implements Listener {
 	public void drop(PlayerDropItemEvent e) {
 		Player player = e.getPlayer();
 		Location loc = e.getPlayer().getLocation();
-		if (!playerpm(player.getName(), loc, 6)) {
+		if (!validatePlayerPermission(player.getName(), loc, 6)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在这个空间扔物品的权限！"));
 			e.setCancelled(true);
             if (player.getGameMode().equals(GameMode.CREATIVE))
@@ -78,13 +78,13 @@ public class SpaceListener implements Listener {
 		Location loc = e.getBlockPlaced().getLocation();
 		if ((e.getBlock().getType().equals(Material.TORCH) || e.getBlock().getType().equals(Material.WALL_TORCH) || e.getBlock().getType().equals(Material.REDSTONE_TORCH) || e.getBlock().getType().equals(Material.REDSTONE_WALL_TORCH))
 				&& !e.getBlockReplacedState().getType().equals(Material.WATER) && !e.getBlockReplacedState().getType().equals(Material.LAVA)) {
-			if (!playerpm(player.getName(), loc, 1)) {
+			if (!validatePlayerPermission(player.getName(), loc, 1)) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在该空间放置火把的权限！"));
 				e.setCancelled(true);
 			}
 		}
 		else {
-			if (!playerpm(player.getName(), loc, 0)) {
+			if (!validatePlayerPermission(player.getName(), loc, 0)) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在该空间放置方块的权限！"));
 				e.setCancelled(true);
 			}
@@ -98,7 +98,7 @@ public class SpaceListener implements Listener {
 			FallingBlock block = (FallingBlock)e.getEntity();
 			String playerName = block.getPersistentDataContainer().get(key, PersistentDataType.STRING);
 			Location loc = e.getBlock().getLocation();
-			if (!playerpm(playerName, loc, 0)) {
+			if (!validatePlayerPermission(playerName, loc, 0)) {
 				e.setCancelled(true);
 				loc.getWorld().dropItemNaturally(loc, new ItemStack(block.getBlockData().getMaterial()));
 			}
@@ -111,7 +111,7 @@ public class SpaceListener implements Listener {
 			return;
 		Player player = e.getPlayer();
 		Location loc = e.getBlockClicked().getRelative(e.getBlockFace()).getLocation();
-		if (!playerpm(player.getName(), loc, 0)) {
+		if (!validatePlayerPermission(player.getName(), loc, 0)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在这个空间放置方块的权限！"));
 			e.setCancelled(true);
 		}
@@ -124,7 +124,7 @@ public class SpaceListener implements Listener {
 		Player player = e.getPlayer();
 		Block block = e.getBlockClicked().getRelative(e.getBlockFace());
 		Location loc = block.getLocation();
-		if (!playerpm(player.getName(), loc, 0)) {
+		if (!validatePlayerPermission(player.getName(), loc, 0)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有破坏该空间方块的权限！"));
 			e.setCancelled(true);
 			player.sendBlockChange(loc, block.getBlockData());
@@ -135,7 +135,7 @@ public class SpaceListener implements Listener {
 	public void takeBook (PlayerTakeLecternBookEvent e) {
 		Player player = e.getPlayer();
 		Location loc = e.getLectern().getLocation();
-		if (!playerpm(player.getName(), loc, 0)) {
+		if (!validatePlayerPermission(player.getName(), loc, 0)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有取走该书的权限！"));
 			e.setCancelled(true);
 		}
@@ -146,13 +146,13 @@ public class SpaceListener implements Listener {
 		Player player = e.getPlayer();
 		Location loc = e.getBlock().getLocation();
 		if (e.getBlock().getType().equals(Material.TORCH) || e.getBlock().getType().equals(Material.WALL_TORCH) || e.getBlock().getType().equals(Material.REDSTONE_TORCH) || e.getBlock().getType().equals(Material.REDSTONE_WALL_TORCH)) {
-			if (!playerpm(player.getName(), loc, 1)) {
+			if (!validatePlayerPermission(player.getName(), loc, 1)) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有破坏该空间火把的权限！"));
 				e.setCancelled(true);
 			}
 		}
 		else {
-			if (!playerpm(player.getName(), loc, 0)) {
+			if (!validatePlayerPermission(player.getName(), loc, 0)) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有破坏该空间方块的权限！"));
 				e.setCancelled(true);
 			}
@@ -206,7 +206,7 @@ public class SpaceListener implements Listener {
 			case OAK_WALL_SIGN:
 				Player player = e.getPlayer();
 				Location loc = e.getBlock().getLocation();
-				if (!playerpm(player.getName(), loc, 7)) {
+				if (!validatePlayerPermission(player.getName(), loc, 7)) {
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有修改该空间牌子的权限！"));
 					e.setCancelled(true);
 				}
@@ -214,7 +214,7 @@ public class SpaceListener implements Listener {
 		}
 		Player player = e.getPlayer();
 		Location loc = e.getBlock().getLocation();
-		if (!playerpm(player.getName(), loc, 2)) {
+		if (!validatePlayerPermission(player.getName(), loc, 2)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有使用该空间方块的权限！"));
 			e.setCancelled(true);
 		}
@@ -226,13 +226,13 @@ public class SpaceListener implements Listener {
 			Player player = e.getPlayer();
 			Location loc = e.getRightClicked().getLocation();
 			if (e.getRightClicked() instanceof RideableMinecart || e.getRightClicked() instanceof Boat) {
-				if (!playerpm(player.getName(), loc, 5)) {
+				if (!validatePlayerPermission(player.getName(), loc, 5)) {
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有使用该空间交通工具的权限！"));
 					e.setCancelled(true);
 				}
 			}
 			else {
-				if (!playerpm(player.getName(), loc, 4)) {
+				if (!validatePlayerPermission(player.getName(), loc, 4)) {
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有使用该空间实体的权限！"));
 					e.setCancelled(true);
 				}
@@ -272,14 +272,14 @@ public class SpaceListener implements Listener {
 		if (natural) {
 			if ((e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Hanging)) {
 				Location loc = e.getEntity().getLocation();
-				NormalSpace space = SpaceManager.getSpace(loc);
+				NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 				if (!space.canExplode())
 					e.setCancelled(true);
 			}
 			return;
 		}
 		Location loc = e.getEntity().getLocation();
-		if (!playerpm(damager.getName(), loc, 3)) {
+		if (!validatePlayerPermission(damager.getName(), loc, 3)) {
 			damager.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有攻击该空间实体的权限！"));
 			e.setCancelled(true);
 		}
@@ -301,7 +301,7 @@ public class SpaceListener implements Listener {
 			if (e.getEntity().getShooter() instanceof Player) {
 				Player player = (Player)e.getEntity().getShooter();
 				Location loc = e.getHitEntity().getLocation();
-				if (!playerpm(player.getName(), loc, 3)) {
+				if (!validatePlayerPermission(player.getName(), loc, 3)) {
 					e.getEntity().setFireTicks(-1);
 				}
 			}
@@ -313,7 +313,7 @@ public class SpaceListener implements Listener {
 		if (e.getRightClicked() instanceof ArmorStand && e.getHand().equals(EquipmentSlot.HAND) && !(e.getRightClicked() instanceof Player)) {
 			Player player = e.getPlayer();
 			Location loc = e.getRightClicked().getLocation();
-			if (!playerpm(player.getName(), loc, 4)) {
+			if (!validatePlayerPermission(player.getName(), loc, 4)) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有使用该空间实体的权限！"));
 				e.setCancelled(true);
 			}
@@ -325,7 +325,7 @@ public class SpaceListener implements Listener {
 		if (e.getRemover() instanceof Player) {
 			Player player = (Player)e.getRemover();
 			Location loc = e.getEntity().getLocation();
-			if (!playerpm(player.getName(), loc, 3)) {
+			if (!validatePlayerPermission(player.getName(), loc, 3)) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有破坏该空间实体的权限！"));
 				e.setCancelled(true);
 			}
@@ -339,7 +339,7 @@ public class SpaceListener implements Listener {
 			if (e.getVehicle() instanceof RideableMinecart || e.getVehicle() instanceof Boat) {
 				Player player = (Player) e.getAttacker();
 				Location loc = e.getVehicle().getLocation();
-				if (!playerpm(player.getName(), loc, 5)) {
+				if (!validatePlayerPermission(player.getName(), loc, 5)) {
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有破坏该空间交通工具的权限！"));
 					e.setCancelled(true);
 				}
@@ -347,7 +347,7 @@ public class SpaceListener implements Listener {
 			else if (e.getVehicle() instanceof Minecart) {
 				Player player = (Player) e.getAttacker();
 				Location loc = e.getVehicle().getLocation();
-				if (!playerpm(player.getName(), loc, 3)) {
+				if (!validatePlayerPermission(player.getName(), loc, 3)) {
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有破坏该空间实体的权限！"));
 					e.setCancelled(true);
 				}
@@ -363,7 +363,7 @@ public class SpaceListener implements Listener {
 			if (cartArmorstand(e.getMaterial()) || spawnEggs(e.getMaterial())) {
 				Player player = e.getPlayer();
 				Location loc = e.getClickedBlock().getLocation();
-				if (!playerpm(player.getName(), loc, 3)) {
+				if (!validatePlayerPermission(player.getName(), loc, 3)) {
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在该空间内放置实体的权限！"));
 					e.setCancelled(true);
 				}
@@ -371,7 +371,7 @@ public class SpaceListener implements Listener {
 			else if (transport(e.getMaterial())) {
 				Player player = e.getPlayer();
 				Location loc = e.getClickedBlock().getLocation();
-				if (!playerpm(player.getName(), loc, 5)) {
+				if (!validatePlayerPermission(player.getName(), loc, 5)) {
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在该空间内放置交通工具的权限！"));
 					e.setCancelled(true);
 				}
@@ -384,7 +384,7 @@ public class SpaceListener implements Listener {
 	public void entity9 (HangingPlaceEvent e) {
 		Player player = e.getPlayer();
 		Location loc = e.getEntity().getLocation();
-		if (!playerpm(player.getName(), loc, 3)) {
+		if (!validatePlayerPermission(player.getName(), loc, 3)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在该空间内放置实体的权限！"));
 			e.setCancelled(true);
 		}
@@ -395,7 +395,7 @@ public class SpaceListener implements Listener {
 		if (e.getState().equals(PlayerFishEvent.State.CAUGHT_ENTITY)) {
 			Player player = e.getPlayer();
 			Location loc = e.getCaught().getLocation();
-			if (!playerpm(player.getName(), loc, 4)) {
+			if (!validatePlayerPermission(player.getName(), loc, 4)) {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有使用该空间实体的权限！"));
 				e.setCancelled(true);
 			}
@@ -408,7 +408,7 @@ public class SpaceListener implements Listener {
 		Map<NormalSpace, Boolean> explodeCache = new HashMap<>();
 		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
-			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.getSpace(block.getLocation()));
+			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.fetchOrCreateSpace(block.getLocation()));
 			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
 				e.blockList().remove(block);
 		}
@@ -419,7 +419,7 @@ public class SpaceListener implements Listener {
 	public void explode2 (EntityDamageEvent e) {
 		if (!(e instanceof EntityDamageByEntityEvent) && (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Hanging)) {
 			Location loc = e.getEntity().getLocation();
-			NormalSpace space = SpaceManager.getSpace(loc);
+			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 			if (!space.canExplode())
 				e.setCancelled(true);
 		}
@@ -436,7 +436,7 @@ public class SpaceListener implements Listener {
 				return;
 		}
 		Location loc = e.getEntity().getLocation();
-		NormalSpace space = SpaceManager.getSpace(loc);
+		NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 		if (!space.canExplode())
 			e.setCancelled(true);
 	}
@@ -447,7 +447,7 @@ public class SpaceListener implements Listener {
 		Map<NormalSpace, Boolean> explodeCache = new HashMap<>();
 		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
-			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.getSpace(block.getLocation()));
+			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.fetchOrCreateSpace(block.getLocation()));
 			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
 				e.blockList().remove(block);
 		}
@@ -457,7 +457,7 @@ public class SpaceListener implements Listener {
 	public void explode5 (EntityChangeBlockEvent e) {
 		if (e.getEntityType().equals(EntityType.RAVAGER)) {
 			Location loc = e.getBlock().getLocation();
-			NormalSpace space = SpaceManager.getSpace(loc);
+			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 			if (!space.canExplode())
 				e.setCancelled(true);
 		}
@@ -467,7 +467,7 @@ public class SpaceListener implements Listener {
 	public void mosterDamage(EntityChangeBlockEvent e) {
 		if (monsters(e.getEntityType())) {
 			Location loc = e.getBlock().getLocation();
-			NormalSpace space = SpaceManager.getSpace(loc);
+			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 			if (!space.canExplode())
 				e.setCancelled(true);
 		}
@@ -477,7 +477,7 @@ public class SpaceListener implements Listener {
 	public void fire(BlockSpreadEvent e) {
 		if (e.getSource().getType().equals(Material.FIRE)) {
 			Location loc = e.getBlock().getLocation();
-			NormalSpace space = SpaceManager.getSpace(loc);
+			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 			if (!space.canFire())
 				e.setCancelled(true);
 		}
@@ -486,7 +486,7 @@ public class SpaceListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void fire2(BlockBurnEvent e) {
 		Location loc = e.getBlock().getLocation();
-		NormalSpace space = SpaceManager.getSpace(loc);
+		NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 		if (!space.canFire())
 			e.setCancelled(true);
 		
@@ -662,12 +662,12 @@ public class SpaceListener implements Listener {
 		}
 	}
 	
-	public static boolean playerpm(String player, Location loc, int pmid) {
+	public static boolean validatePlayerPermission(String player, Location loc, int pmid) {
 
-		NormalSpace space = SpaceManager.getSpace(loc);
+		NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
 		if (space.owner() != null && player.equals(space.owner()))
 			return true;
-		int group = checkGroup(space, player);
+		int group = resolvePlayerHighestGroup(space, player);
 		char[] pm = space.permission(group);
 		if (pm[pmid] == '1')
 			return true;
@@ -676,7 +676,7 @@ public class SpaceListener implements Listener {
 
 	}
 	
-	private static int checkGroup(NormalSpace space, String player) {
+	private static int resolvePlayerHighestGroup(NormalSpace space, String player) {
 		for (int i = 1; i < 4; i++) {
 			for (String s : space.group(i)) {
 				if (s.startsWith(">")) {

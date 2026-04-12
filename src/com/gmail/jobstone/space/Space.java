@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class Space {
 
-    protected void saveConfigAsync(FileConfiguration config) {
+    protected void persistToDiskAsync(FileConfiguration config) {
         new org.bukkit.scheduler.BukkitRunnable() {
             @Override
             public void run() {
@@ -34,7 +34,7 @@ public abstract class Space {
     char[] permission4 = {'0', '1', '1', '1', '1', '1', '1', '1', '1', '0'};
 
 
-    public File file() {
+    public File getInternalFile() {
         return file;
     }
 
@@ -84,7 +84,7 @@ public abstract class Space {
                 config.set("group3", group3);
                 break;
         }
-        this.saveConfigAsync(config);
+        this.persistToDiskAsync(config);
     }
 
 
@@ -114,7 +114,7 @@ public abstract class Space {
                 }
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("group" + group, original);
-                this.saveConfigAsync(config);
+                this.persistToDiskAsync(config);
                 return 1;
             default:
                 return 0;
@@ -132,7 +132,7 @@ public abstract class Space {
                 original.removeAll(names);
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 config.set("group" + group, original);
-                this.saveConfigAsync(config);
+                this.persistToDiskAsync(config);
                 return true;
             default:
                 return false;
@@ -155,7 +155,7 @@ public abstract class Space {
                         original[j] = pm[j];
                 }
                 config.set("permission" + i, String.valueOf(original));
-                this.saveConfigAsync(config);
+                this.persistToDiskAsync(config);
         }
     }
 

@@ -29,7 +29,7 @@ public class NormalSpace extends Space {
     public NormalSpace(String id, int world) {
         this.id = id;
         this.world = world;
-        this.file = NormalSpace.getFile(world, id);
+        this.file = NormalSpace.resolveStorageFile(world, id);
         boolean exist = SpaceManager.scanFinished ? SpaceManager.knownFiles.contains(file.getAbsolutePath()) : file.exists();
         if (exist) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -132,14 +132,14 @@ public class NormalSpace extends Space {
         config.set("owner", owner);
         config.set("owner_type", ownerType.name());
         SpaceManager.knownFiles.add(this.file.getAbsolutePath());
-        this.saveConfigAsync(config);
-        this.update();
+        this.persistToDiskAsync(config);
+        this.syncToCache();
     }
 
     @Override
     public void setGroup(int group, List<String> list) {
         super.setGroup(group, list);
-        this.update();
+        this.syncToCache();
     }
 
     //返回值：0.失败 1.成功 2.人数已满
@@ -147,7 +147,7 @@ public class NormalSpace extends Space {
     public int addGroup(int group, List<String> names) {
         int result = super.addGroup(group, names);
         if (1 == result)
-            this.update();
+            this.syncToCache();
         return result;
     }
 
@@ -156,17 +156,17 @@ public class NormalSpace extends Space {
     public boolean removeGroup(int group, List<String> names) {
         boolean result = super.removeGroup(group, names);
         if (result)
-            this.update();
+            this.syncToCache();
         return result;
     }
 
     @Override
     public void setPermission(int i, char[] pm) {
         super.setPermission(i, pm);
-        this.update();
+        this.syncToCache();
     }
 
-    public void remove() {
+    public void deleteSpaceAndFiles() {
         SpaceOwner spaceOwner;
         if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER))
             spaceOwner = new SpacePlayer(owner);
@@ -175,10 +175,10 @@ public class NormalSpace extends Space {
         spaceOwner.removeSpace(world, id);
         this.file.delete();
         SpaceManager.knownFiles.remove(this.file.getAbsolutePath());
-        this.update();
+        this.syncToCache();
     }
 
-    public void update() {
+    public void syncToCache() {
         SpaceManager manager = SpaceManager.getSpaceManager(world);
         manager.update(id, new NormalSpace(id, world));
     }
@@ -326,7 +326,7 @@ public class NormalSpace extends Space {
     }
 
     public static boolean isOwned(String id, int world) {
-        return NormalSpace.getFile(world, id).exists();
+        return NormalSpace.resolveStorageFile(world, id).exists();
     }
 
     public static int getWorldId(Location loc) {
@@ -432,7 +432,7 @@ public class NormalSpace extends Space {
         }
     }
 
-    public static File getFile(int world, String id) {
+    public static File resolveStorageFile(int world, String id) {
         String[] splits = id.split("\\.");
         if (splits.length != 3)
             return null;
