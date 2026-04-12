@@ -130,12 +130,8 @@ public class NormalSpace extends Space {
         ownerType = spaceOwner.getType();
         config.set("owner", owner);
         config.set("owner_type", ownerType.name());
-        try {
-            config.save(file);
-            this.update();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.saveConfigAsync(config);
+        this.update();
     }
 
     @Override
