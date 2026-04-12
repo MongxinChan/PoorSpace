@@ -93,7 +93,7 @@ public class SpaceOpen {
 		
 		for(int i = istart; i <= imax; i++) {
 			NormalSpace space = new NormalSpace(list.get(i-1), world);
-			inv.setItem(i-istart, space.toItem());
+			inv.setItem(i-istart, space.buildDisplayItem());
 		}
 		
 		player.openInventory(inv);
@@ -439,7 +439,7 @@ public class SpaceOpen {
 		List<String> groups = spacePlayer.getGroups();
 		int size = groups.size();
 		for (int i = 0; i < size; i++) {
-			inv.setItem(i, (new SpaceGroup(groups.get(i))).toItem());
+			inv.setItem(i, (new SpaceGroup(groups.get(i))).buildDisplayItem());
 		}
 
 		player.openInventory(inv);
@@ -493,7 +493,7 @@ public class SpaceOpen {
 
 		int istart = (page-1)*45+1;
 		for (int i = istart; i <= imax; i++) {
-			inv.setItem(i-istart, (new SpaceGroup(groups.get(i-1))).toItem());
+			inv.setItem(i-istart, (new SpaceGroup(groups.get(i-1))).buildDisplayItem());
 		}
 
 		player.openInventory(inv);
@@ -573,7 +573,7 @@ public class SpaceOpen {
             item.setItemMeta(meta);
             inv.setItem(1, item);
 
-            inv.setItem(0, group.toItem());
+            inv.setItem(0, group.buildDisplayItem());
             inv.setItem(49, newItem(Material.STRUCTURE_VOID, "§a§l返回个人群组界面"));
             switch (role) {
 				case OWNER:

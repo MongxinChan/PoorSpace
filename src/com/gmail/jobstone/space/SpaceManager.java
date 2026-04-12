@@ -30,8 +30,8 @@ public class SpaceManager {
             .build();
     private ConcurrentMap<String, NormalSpace> loadedSpaces = spaceCache.asMap();
 
-    public boolean load(String id) {
-        if (isLoaded(id))
+    public boolean allocateSpace(String id) {
+        if (isCachedInRAM(id))
             return false;
         loadedSpaces.put(id, new NormalSpace(id, world));
         return true;
@@ -41,20 +41,20 @@ public class SpaceManager {
         loadedSpaces.replace(id, space);
     }
 
-    public boolean unload(String id) {
-        if (isLoaded(id)) {
+    public boolean evictFromCache(String id) {
+        if (isCachedInRAM(id)) {
             loadedSpaces.remove(id);
             return true;
         }
         return false;
     }
 
-    private boolean isLoaded(String id) {
+    private boolean isCachedInRAM(String id) {
         return loadedSpaces.containsKey(id);
     }
 
-    public NormalSpace getSpace(String id) {
-        if (isLoaded(id)) {
+    public NormalSpace fetchOrCreateSpace(String id) {
+        if (isCachedInRAM(id)) {
             return loadedSpaces.get(id);
         }
         else {
@@ -119,8 +119,8 @@ public class SpaceManager {
         }
     }
 
-    public static NormalSpace getSpace(Location loc) {
-        return SpaceManager.getSpaceManager(loc.getWorld().getName()).getSpace(NormalSpace.getSpaceId(loc));
+    public static NormalSpace fetchOrCreateSpace(Location loc) {
+        return SpaceManager.getSpaceManager(loc.getWorld().getName()).fetchOrCreateSpace(NormalSpace.getSpaceId(loc));
     }
 
 }

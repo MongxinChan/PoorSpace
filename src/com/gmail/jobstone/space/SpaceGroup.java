@@ -27,7 +27,7 @@ public class SpaceGroup {
         this.cachedConfig = null;
     }
 
-    private FileConfiguration getConfig() {
+    private FileConfiguration fetchLocalDataFile() {
         if (cachedConfig == null) {
             if (!this.exists()) return null;
             cachedConfig = YamlConfiguration.loadConfiguration(new File(this.folder, "data.yml"));
@@ -47,7 +47,7 @@ public class SpaceGroup {
 
     public boolean contains(String player) {
         if (this.exists()) {
-            FileConfiguration config = getConfig();
+            FileConfiguration config = fetchLocalDataFile();
             return config.getString("owner").equals(player) || config.getStringList("ops").contains(player) || config.getStringList("members").contains(player);
         }
         else
@@ -57,7 +57,7 @@ public class SpaceGroup {
 
     public List<String> getMembers() {
         if (this.exists()) {
-            FileConfiguration config = getConfig();
+            FileConfiguration config = fetchLocalDataFile();
             return config.getStringList("members");
         }
         else
@@ -125,7 +125,7 @@ public class SpaceGroup {
 
     public List<String> getOps() {
         if (this.exists()) {
-            FileConfiguration config = getConfig();
+            FileConfiguration config = fetchLocalDataFile();
             return config.getStringList("ops");
         }
         else
@@ -239,7 +239,7 @@ public class SpaceGroup {
 
     public String getOwner() {
         if (this.exists()) {
-            FileConfiguration config = getConfig();
+            FileConfiguration config = fetchLocalDataFile();
             return config.getString("owner");
         }
         else
@@ -327,7 +327,7 @@ public class SpaceGroup {
     }
 
 
-    public ItemStack toItem() {
+    public ItemStack buildDisplayItem() {
 
         if (!this.exists())
             return null;

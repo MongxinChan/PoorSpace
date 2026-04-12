@@ -35,7 +35,7 @@ public class GeneralListener implements Listener {
         Chunk chunk = e.getChunk();
         int max = NormalSpace.getWorldMax(NormalSpace.getWorldId(world));
         for (int i = 0; i <= max; i++) {
-            manager.unload(chunk.getX()+"."+chunk.getZ()+"."+i);
+            manager.evictFromCache(chunk.getX()+"."+chunk.getZ()+"."+i);
         }
     }
 
