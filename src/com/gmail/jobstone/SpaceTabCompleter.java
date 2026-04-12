@@ -35,53 +35,50 @@ public class SpaceTabCompleter implements TabCompleter {
                     startCheck(first, args[0], list);
                 }
                 else if (args.length == 2) {
-                    if (args[0].equals("permission")) {
-                        list.add("set");
-                    } else if (args[0].equals("pmgroup")) {
-                        if ("set".startsWith(args[1].toLowerCase())) {
+                    switch (args[0]) {
+                        case "permission":
                             list.add("set");
-                        }
-                        if ("add".startsWith(args[1].toLowerCase())) {
-                            list.add("add");
-                        }
-                        if ("remove".startsWith(args[1].toLowerCase())) {
-                            list.add("remove");
-                        }
-                    }
-                    // [TODO] 这里改成switch
-                    else if (args[0].equals("selector")) {
-                        if ("set".startsWith(args[1].toLowerCase())) {
-                            list.add("set");
-                        }
-                        if ("remove".startsWith(args[1].toLowerCase())) {
-                            list.add("remove");
-                        }
-                        if ("list".startsWith(args[1].toLowerCase())) {
-                            list.add("list");
-                        }
-                    }
-
-                    else if (args[0].equals("space")) {
-                        startCheck(world, args[1], list);
-                    }
-
-                    else if (args[0].equals("group")) {
-                        if ("search".startsWith(args[1].toLowerCase())) {
-                            list.add("search");
-                        }
-                        if ("add".startsWith(args[1].toLowerCase())) {
-                            list.add("add");
-                        }
-                        if ("remove".startsWith(args[1].toLowerCase())) {
-                            list.add("remove");
-                        }
-                        if ("create".startsWith(args[1].toLowerCase())) {
-                            list.add("create");
-                        }
-                    }
-
-                    else if (args[0].equals("copy")) {
-                        startCheck(world, args[1], list);
+                            break;
+                        case "pmgroup":
+                            if ("set".startsWith(args[1].toLowerCase())) {
+                                list.add("set");
+                            }
+                            if ("add".startsWith(args[1].toLowerCase())) {
+                                list.add("add");
+                            }
+                            if ("remove".startsWith(args[1].toLowerCase())) {
+                                list.add("remove");
+                            }
+                            break;
+                        case "selector":
+                            if ("set".startsWith(args[1].toLowerCase())) {
+                                list.add("set");
+                            }
+                            if ("remove".startsWith(args[1].toLowerCase())) {
+                                list.add("remove");
+                            }
+                            if ("list".startsWith(args[1].toLowerCase())) {
+                                list.add("list");
+                            }
+                            break;
+                        case "space":
+                        case "copy":
+                            startCheck(world, args[1], list);
+                            break;
+                        case "group":
+                            if ("search".startsWith(args[1].toLowerCase())) {
+                                list.add("search");
+                            }
+                            if ("add".startsWith(args[1].toLowerCase())) {
+                                list.add("add");
+                            }
+                            if ("remove".startsWith(args[1].toLowerCase())) {
+                                list.add("remove");
+                            }
+                            if ("create".startsWith(args[1].toLowerCase())) {
+                                list.add("create");
+                            }
+                            break;
                     }
                 }
                 else if (args.length == 3) {
