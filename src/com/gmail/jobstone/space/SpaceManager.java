@@ -121,7 +121,8 @@ public class SpaceManager {
     }
 
     public static NormalSpace fetchOrCreateSpace(Location loc) {
-        return SpaceManager.getSpaceManager(loc.getWorld().getName()).fetchOrCreateSpace(NormalSpace.getSpaceId(loc));
+        return SpaceManager.getSpaceManager(loc.getWorld().getName()).
+                fetchOrCreateSpace(NormalSpace.getSpaceId(loc));
     }
 
 }

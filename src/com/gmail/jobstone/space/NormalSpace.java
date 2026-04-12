@@ -25,12 +25,12 @@ public class NormalSpace extends Space {
     private String owner;
     private SpaceOwner.OwnerType ownerType;
 
-
     public NormalSpace(String id, int world) {
         this.id = id;
         this.world = world;
         this.file = NormalSpace.resolveStorageFile(world, id);
-        boolean exist = SpaceManager.scanFinished ? SpaceManager.knownFiles.contains(file.getAbsolutePath()) : file.exists();
+        boolean exist = SpaceManager.scanFinished ? SpaceManager.knownFiles.contains(file.getAbsolutePath())
+                : file.exists();
         if (exist) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             owner = config.getString("owner");
@@ -42,8 +42,7 @@ public class NormalSpace extends Space {
             permission2 = config.getString("permission2").toCharArray();
             permission3 = config.getString("permission3").toCharArray();
             permission4 = config.getString("permission4").toCharArray();
-        }
-        else {
+        } else {
             owner = null;
             ownerType = null;
             if (world == 3) {
@@ -84,17 +83,16 @@ public class NormalSpace extends Space {
         }
     }
 
-
     public ItemStack buildDisplayItem() {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.setDisplayName("§a§l空间"+id);
+        meta.setDisplayName("§a§l空间" + id);
         ArrayList<String> lore = new ArrayList<String>();
         if (this.ownerType.equals(SpaceOwner.OwnerType.PLAYER)) {
-            lore.add("§7所有者：§e"+owner);
+            lore.add("§7所有者：§e" + owner);
         } else {
-            lore.add("§7所有者：§e"+owner+"[群组]");
+            lore.add("§7所有者：§e" + owner + "[群组]");
         }
         lore.add("§e点击查看");
         meta.setLore(lore);
@@ -113,8 +111,7 @@ public class NormalSpace extends Space {
             config.set("permission2", String.valueOf(permission2));
             config.set("permission3", String.valueOf(permission3));
             config.set("permission4", String.valueOf(permission4));
-        }
-        else {
+        } else {
             this.getOwner().removeSpace(world, id);
         }
 
@@ -146,7 +143,7 @@ public class NormalSpace extends Space {
         this.syncToCache();
     }
 
-    //返回值：0.失败 1.成功 2.人数已满
+    // 返回值：0.失败 1.成功 2.人数已满
     @Override
     public int addGroup(int group, List<String> names) {
         int result = super.addGroup(group, names);
@@ -156,7 +153,7 @@ public class NormalSpace extends Space {
         return result;
     }
 
-    //返回值：0.失败 1.成功
+    // 返回值：0.失败 1.成功
     @Override
     public boolean removeGroup(int group, List<String> names) {
         boolean result = super.removeGroup(group, names);
@@ -193,7 +190,7 @@ public class NormalSpace extends Space {
     public static int[] getSpaceYBounds(int world, int y) {
         int[] result = new int[2];
         if (world == 0) {
-            switch(y) {
+            switch (y) {
                 case 0:
                     result[0] = 0;
                     result[1] = 20;
@@ -218,9 +215,8 @@ public class NormalSpace extends Space {
                     result[0] = 0;
                     result[1] = 256;
             }
-        }
-        else if (world == 1) {
-            switch(y) {
+        } else if (world == 1) {
+            switch (y) {
                 case 0:
                     result[0] = 0;
                     result[1] = 50;
@@ -237,8 +233,7 @@ public class NormalSpace extends Space {
                     result[0] = 0;
                     result[1] = 256;
             }
-        }
-        else {
+        } else {
             result[0] = 0;
             result[1] = 256;
         }
@@ -247,9 +242,9 @@ public class NormalSpace extends Space {
 
     public static void showParticle(Player player, String id, int world) {
 
-        int startx = 16*Integer.parseInt(id.substring(0, id.indexOf(".")));
-        int y = Integer.parseInt(id.substring(id.lastIndexOf(".")+1));
-        int startz = 16*Integer.parseInt(id.substring(id.indexOf(".")+1, id.lastIndexOf(".")));
+        int startx = 16 * Integer.parseInt(id.substring(0, id.indexOf(".")));
+        int y = Integer.parseInt(id.substring(id.lastIndexOf(".") + 1));
+        int startz = 16 * Integer.parseInt(id.substring(id.indexOf(".") + 1, id.lastIndexOf(".")));
 
         int[] yBounds = NormalSpace.getSpaceYBounds(world, y);
         final int top = yBounds[0];
@@ -257,26 +252,26 @@ public class NormalSpace extends Space {
 
         World w = player.getWorld();
 
-        int startx1 = startx+16;
-        int startz1 = startz+16;
+        int startx1 = startx + 16;
+        int startz1 = startz + 16;
         Set<int[]> set = new HashSet<>();
 
-        for (int i = 0; bottom+i <= top; i = i+2) {
-            for (int j = 0; j <= 16; j = j+2) {
-                set.add(new int[]{startx, bottom+i, startz+j});
-                set.add(new int[]{startx1, bottom+i, startz+j});
+        for (int i = 0; bottom + i <= top; i = i + 2) {
+            for (int j = 0; j <= 16; j = j + 2) {
+                set.add(new int[] { startx, bottom + i, startz + j });
+                set.add(new int[] { startx1, bottom + i, startz + j });
             }
         }
-        for (int i = 0; i <= 16; i = i+2) {
-            for (int j = 0; j <= 16; j = j+2) {
-                set.add(new int[]{startx+i, bottom, startz+j});
-                set.add(new int[]{startx+i, top, startz+j});
+        for (int i = 0; i <= 16; i = i + 2) {
+            for (int j = 0; j <= 16; j = j + 2) {
+                set.add(new int[] { startx + i, bottom, startz + j });
+                set.add(new int[] { startx + i, top, startz + j });
             }
         }
-        for (int i = 0; i <= 16; i = i+2) {
-            for (int j = 0; bottom+j <= top; j = j+2) {
-                set.add(new int[]{startx+i, bottom+j, startz});
-                set.add(new int[]{startx+i, bottom+j, startz1});
+        for (int i = 0; i <= 16; i = i + 2) {
+            for (int j = 0; bottom + j <= top; j = j + 2) {
+                set.add(new int[] { startx + i, bottom + j, startz });
+                set.add(new int[] { startx + i, bottom + j, startz1 });
             }
         }
 
@@ -291,7 +286,7 @@ public class NormalSpace extends Space {
                 }
                 times++;
                 if (times == 10) {
-                    NormalSpace.limit.put(player.getName(), NormalSpace.limit.get(player.getName())-1);
+                    NormalSpace.limit.put(player.getName(), NormalSpace.limit.get(player.getName()) - 1);
                     this.cancel();
                 }
             }
@@ -299,14 +294,12 @@ public class NormalSpace extends Space {
 
     }
 
-
     public static Map<String, Integer> limit = new HashMap<>();
 
-
     public static int cost(String id, int world) {
-        String m = id.substring(id.lastIndexOf(".")+1);
+        String m = id.substring(id.lastIndexOf(".") + 1);
         if (world == 0) {
-            switch(m) {
+            switch (m) {
                 case "0":
                     return 120;
                 case "1":
@@ -318,9 +311,8 @@ public class NormalSpace extends Space {
                 case "4":
                     return 160;
             }
-        }
-        else if (world == 1) {
-            switch(m) {
+        } else if (world == 1) {
+            switch (m) {
                 case "0":
                     return 100;
                 case "1":
@@ -328,8 +320,7 @@ public class NormalSpace extends Space {
                 case "2":
                     return 300;
             }
-        }
-        else if (world == 2) {
+        } else if (world == 2) {
             return 300;
         } else if (world == 3) {
             return 100;
@@ -353,64 +344,62 @@ public class NormalSpace extends Space {
         String world = loc.getWorld().getName();
         if (world.equals("world")) {
             if (y < 20) {
-                return x+"."+z+".0";
+                return x + "." + z + ".0";
             } else if (y < 50) {
-                return x+"."+z+".1";
+                return x + "." + z + ".1";
             } else if (y < 100) {
-                return x+"."+z+".2";
+                return x + "." + z + ".2";
             } else if (y < 200) {
-                return x+"."+z+".3";
+                return x + "." + z + ".3";
             } else {
-                return x+"."+z+".4";
+                return x + "." + z + ".4";
             }
-        }
-        else if (world.equals("world_nether")) {
+        } else if (world.equals("world_nether")) {
             if (y < 50) {
-                return x+"."+z+".0";
+                return x + "." + z + ".0";
             } else if (y < 128) {
-                return x+"."+z+".1";
+                return x + "." + z + ".1";
             } else {
-                return x+"."+z+".2";
+                return x + "." + z + ".2";
             }
-        }
-        else {
-            return x+"."+z+".0";
+        } else {
+            return x + "." + z + ".0";
         }
     }
 
-//	public static int getSpaceY(String world, int y) {
-//		if (world.equals("world")) {
-//			if (y < 20)
-//				return 0;
-//			else if (y < 50)
-//				return 1;
-//			else if (y < 100)
-//				return 2;
-//			else if (y < 200)
-//				return 3;
-//			else
-//				return 4;
-//		}
-//		else if (world.equals("world_nether")) {
-//			if (y < 50)
-//				return 0;
-//			else if (y < 128)
-//				return 1;
-//			else
-//				return 2;
-//		}
-//		else
-//			return 0;
-//	}
+    // public static int getSpaceY(String world, int y) {
+    // if (world.equals("world")) {
+    // if (y < 20)
+    // return 0;
+    // else if (y < 50)
+    // return 1;
+    // else if (y < 100)
+    // return 2;
+    // else if (y < 200)
+    // return 3;
+    // else
+    // return 4;
+    // }
+    // else if (world.equals("world_nether")) {
+    // if (y < 50)
+    // return 0;
+    // else if (y < 128)
+    // return 1;
+    // else
+    // return 2;
+    // }
+    // else
+    // return 0;
+    // }
 
     public static boolean isSpaceLegal(String id, int world) {
-        if (!id.contains(".") || !id.substring(id.indexOf(".")+1).contains(".")) {
+        if (!id.contains(".") || !id.substring(id.indexOf(".") + 1).contains(".")) {
             return false;
         }
         try {
             Integer.parseInt(id.substring(0, id.indexOf(".")));
-            int y = Integer.parseInt(id.substring(id.lastIndexOf(".")+1));
-            Integer.parseInt(id.substring(id.indexOf(".")+1, id.lastIndexOf(".")));
+            int y = Integer.parseInt(id.substring(id.lastIndexOf(".") + 1));
+            Integer.parseInt(id.substring(id.indexOf(".") + 1, id.lastIndexOf(".")));
             if (y >= 0 && y <= NormalSpace.getWorldMax(world)) {
                 return true;
             } else {
@@ -435,7 +424,7 @@ public class NormalSpace extends Space {
     }
 
     public static int getWorldMax(int world) {
-        switch(world) {
+        switch (world) {
             case 0:
                 return 4;
             case 1:
@@ -476,7 +465,7 @@ public class NormalSpace extends Space {
     @Override
     public boolean equals(Object o) {
         if (o instanceof NormalSpace) {
-            NormalSpace space = (NormalSpace)o;
+            NormalSpace space = (NormalSpace) o;
             return space.world() == this.world && space.id().equals(this.id);
         }
         return false;

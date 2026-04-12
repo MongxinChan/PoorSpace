@@ -35,9 +35,9 @@ public abstract class SpaceOwner {
     public boolean addSpace(int world, String id) {
         FileConfiguration config = YamlConfiguration.loadConfiguration(getWorldFile(world));
         List<String> spaces = config.getStringList("list");
-        if (spaces.contains(id))
+        if (spaces.contains(id)) {
             return false;
-        else {
+        } else {
             spaces.add(id);
             config.set("list", spaces);
             try {
@@ -64,8 +64,9 @@ public abstract class SpaceOwner {
                 return false;
             }
         }
-        else
+        else {
             return false;
+        }
     }
 
     public abstract OwnerType getType();
