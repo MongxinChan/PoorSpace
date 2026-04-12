@@ -69,7 +69,7 @@ public class SpaceListener implements Listener {
             HashMap<Integer, ItemStack> lostitems = inv2.addItem(e.getItemDrop().getItemStack().clone());
             if (!lostitems.isEmpty()) {
                 Message message = new Message(System.currentTimeMillis(), "穷娘", player.getName(), "丢失的物品", "您不小心丢掉了一份物品，请及时查收~");
-                message.create(lostitems.get(new Integer(0)));
+                message.create(lostitems.get(0));
             }
 		}
 	}
@@ -172,7 +172,6 @@ public class SpaceListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW)
 	public void interact2(PlayerInteractEvent e) {
-		e.getPlayer().sendMessage("block: " + e.useInteractedBlock().name() + ", item: " + e.useItemInHand().name());
 		if (!e.useInteractedBlock().equals(Event.Result.DENY) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if ((!e.getPlayer().isSneaking() || e.getItem() == null) && trigger(e.getClickedBlock(), e.getItem())) {
 				PBlockInteractEvent event = new PBlockInteractEvent(e.getPlayer(), e.getClickedBlock());
@@ -540,11 +539,7 @@ public class SpaceListener implements Listener {
 	}
 	
 	private boolean spawnEggs(Material material) {
-		if (material.name().endsWith("SPAWN_EGG")) {
-            return true;
-        } else {
-            return false;
-        }
+		return material.name().endsWith("SPAWN_EGG");
 	}
 	
 	private boolean monsters(EntityType type) {
@@ -713,12 +708,4 @@ public class SpaceListener implements Listener {
 		}
 		return 4;
 	}
-	
-	
-//	private void sendActionBarMessage(Player player, String message) {
-//        IChatBaseComponent dummyComponent = ChatSerializer.a("{\"text\":\""+message+"\"}");
-//        PacketPlayOutChat packet = new PacketPlayOutChat(dummyComponent, ChatMessageType.GAME_INFO);
-//        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-//	}
-
 }
