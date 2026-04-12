@@ -45,8 +45,9 @@ public class SpaceListener implements Listener {
 		if (e.getEntity() instanceof Player) {
 			String player = ((Player)e.getEntity()).getName();
 			Location loc = e.getItem().getLocation();
-			if (!validatePlayerPermission(player, loc, 6))
-				e.setCancelled(true);
+			if (!validatePlayerPermission(player, loc, 6)) {
+                e.setCancelled(true);
+            }
 		}
 	}
 	
@@ -57,8 +58,9 @@ public class SpaceListener implements Listener {
 		if (!validatePlayerPermission(player.getName(), loc, 6)) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("您没有在这个空间扔物品的权限！"));
 			e.setCancelled(true);
-            if (player.getGameMode().equals(GameMode.CREATIVE))
+            if (player.getGameMode().equals(GameMode.CREATIVE)) {
                 return;
+            }
             Inventory inv = player.getInventory();
             Inventory inv2 = Bukkit.createInventory(null, 36);
             for (int i = 0; i < 36; i++) {
@@ -107,8 +109,9 @@ public class SpaceListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void bucketPlace(PlayerBucketEmptyEvent e) {
-		if (e.getBucket().equals(Material.MILK_BUCKET))
-			return;
+		if (e.getBucket().equals(Material.MILK_BUCKET)) {
+            return;
+        }
 		Player player = e.getPlayer();
 		Location loc = e.getBlockClicked().getRelative(e.getBlockFace()).getLocation();
 		if (!validatePlayerPermission(player.getName(), loc, 0)) {
@@ -119,8 +122,9 @@ public class SpaceListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void bucketFill(PlayerBucketFillEvent e) {
-		if (e.getItemStack().getType().equals(Material.MILK_BUCKET))
-			return;
+		if (e.getItemStack().getType().equals(Material.MILK_BUCKET)) {
+            return;
+        }
 		Player player = e.getPlayer();
 		Block block = e.getBlockClicked().getRelative(e.getBlockFace());
 		Location loc = block.getLocation();
@@ -173,16 +177,18 @@ public class SpaceListener implements Listener {
 			if ((!e.getPlayer().isSneaking() || e.getItem() == null) && trigger(e.getClickedBlock(), e.getItem())) {
 				PBlockInteractEvent event = new PBlockInteractEvent(e.getPlayer(), e.getClickedBlock());
 				Bukkit.getPluginManager().callEvent(event);
-				if (event.isCancelled())
-					e.setUseInteractedBlock(Event.Result.DENY);
+				if (event.isCancelled()) {
+                    e.setUseInteractedBlock(Event.Result.DENY);
+                }
 				return;
 			}
 		}
 		if (e.getItem() != null && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			PItemUseEvent itemUseEvent = new PItemUseEvent(e.getPlayer(), e.getItem());
 			Bukkit.getPluginManager().callEvent(itemUseEvent);
-			if (itemUseEvent.isCancelled())
-				e.setUseItemInHand(Event.Result.DENY);
+			if (itemUseEvent.isCancelled()) {
+                e.setUseItemInHand(Event.Result.DENY);
+            }
 		}
 	}
 
@@ -243,15 +249,17 @@ public class SpaceListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void interact4(EntityDamageByEntityEvent e) {
 		Entity entity = e.getEntity();
-		if ((entity instanceof Monster || entity instanceof Slime || entity instanceof Flying || entity instanceof Shulker || entity instanceof EnderDragon) && e.getEntity().getCustomName() == null)
-			return;
-		if (entity instanceof Projectile || entity instanceof Player)
-			return;
+		if ((entity instanceof Monster || entity instanceof Slime || entity instanceof Flying || entity instanceof Shulker || entity instanceof EnderDragon) && e.getEntity().getCustomName() == null) {
+            return;
+        }
+		if (entity instanceof Projectile || entity instanceof Player) {
+            return;
+        }
 		Player damager;
 		boolean natural = false;
-		if (e.getDamager() instanceof Player)
-			damager = (Player)e.getDamager();
-		else if (e.getDamager() instanceof Projectile && ((Projectile)e.getDamager()).getShooter() instanceof Player) {
+		if (e.getDamager() instanceof Player) {
+            damager = (Player)e.getDamager();
+        } else if (e.getDamager() instanceof Projectile && ((Projectile)e.getDamager()).getShooter() instanceof Player) {
 			damager = (Player) ((Projectile) e.getDamager()).getShooter();
 		}
 		else if (e.getDamager() instanceof Firework) {
@@ -273,8 +281,9 @@ public class SpaceListener implements Listener {
 			if ((e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Hanging)) {
 				Location loc = e.getEntity().getLocation();
 				NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-				if (!space.canExplode())
-					e.setCancelled(true);
+				if (!space.canExplode()) {
+                    e.setCancelled(true);
+                }
 			}
 			return;
 		}
@@ -409,8 +418,9 @@ public class SpaceListener implements Listener {
 		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
 			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.fetchOrCreateSpace(block.getLocation()));
-			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
-				e.blockList().remove(block);
+			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode)) {
+                e.blockList().remove(block);
+            }
 		}
 	}
 
@@ -420,16 +430,18 @@ public class SpaceListener implements Listener {
 		if (!(e instanceof EntityDamageByEntityEvent) && (e.getEntity() instanceof ArmorStand || e.getEntity() instanceof Hanging)) {
 			Location loc = e.getEntity().getLocation();
 			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-			if (!space.canExplode())
-				e.setCancelled(true);
+			if (!space.canExplode()) {
+                e.setCancelled(true);
+            }
 		}
 	}
 
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void explode3 (HangingBreakEvent e) {
-		if (e instanceof HangingBreakByEntityEvent && ((HangingBreakByEntityEvent)e).getRemover() instanceof Player)
-			return;
+		if (e instanceof HangingBreakByEntityEvent && ((HangingBreakByEntityEvent)e).getRemover() instanceof Player) {
+            return;
+        }
 		switch (e.getCause()) {
 			case PHYSICS:
 			case OBSTRUCTION:
@@ -437,8 +449,9 @@ public class SpaceListener implements Listener {
 		}
 		Location loc = e.getEntity().getLocation();
 		NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-		if (!space.canExplode())
-			e.setCancelled(true);
+		if (!space.canExplode()) {
+            e.setCancelled(true);
+        }
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -448,8 +461,9 @@ public class SpaceListener implements Listener {
 		List<Block> blockListCopy = new ArrayList<>(e.blockList());
 		for (Block block : blockListCopy) {
 			NormalSpace space = groupSpace.computeIfAbsent(NormalSpace.getSpaceId(block.getLocation()), k -> SpaceManager.fetchOrCreateSpace(block.getLocation()));
-			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode))
-				e.blockList().remove(block);
+			if (!explodeCache.computeIfAbsent(space, NormalSpace::canExplode)) {
+                e.blockList().remove(block);
+            }
 		}
 	}
 
@@ -458,8 +472,9 @@ public class SpaceListener implements Listener {
 		if (e.getEntityType().equals(EntityType.RAVAGER)) {
 			Location loc = e.getBlock().getLocation();
 			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-			if (!space.canExplode())
-				e.setCancelled(true);
+			if (!space.canExplode()) {
+                e.setCancelled(true);
+            }
 		}
 	}
 	
@@ -468,8 +483,9 @@ public class SpaceListener implements Listener {
 		if (monsters(e.getEntityType())) {
 			Location loc = e.getBlock().getLocation();
 			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-			if (!space.canExplode())
-				e.setCancelled(true);
+			if (!space.canExplode()) {
+                e.setCancelled(true);
+            }
 		}
 	}
 	
@@ -478,8 +494,9 @@ public class SpaceListener implements Listener {
 		if (e.getSource().getType().equals(Material.FIRE)) {
 			Location loc = e.getBlock().getLocation();
 			NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-			if (!space.canFire())
-				e.setCancelled(true);
+			if (!space.canFire()) {
+                e.setCancelled(true);
+            }
 		}
 	}
 	
@@ -487,8 +504,9 @@ public class SpaceListener implements Listener {
 	public void fire2(BlockBurnEvent e) {
 		Location loc = e.getBlock().getLocation();
 		NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-		if (!space.canFire())
-			e.setCancelled(true);
+		if (!space.canFire()) {
+            e.setCancelled(true);
+        }
 		
 	}
 
@@ -522,10 +540,11 @@ public class SpaceListener implements Listener {
 	}
 	
 	private boolean spawnEggs(Material material) {
-		if (material.name().endsWith("SPAWN_EGG"))
-			return true;
-		else
-			return false;
+		if (material.name().endsWith("SPAWN_EGG")) {
+            return true;
+        } else {
+            return false;
+        }
 	}
 	
 	private boolean monsters(EntityType type) {
@@ -665,14 +684,16 @@ public class SpaceListener implements Listener {
 	public static boolean validatePlayerPermission(String player, Location loc, int pmid) {
 
 		NormalSpace space = SpaceManager.fetchOrCreateSpace(loc);
-		if (space.owner() != null && player.equals(space.owner()))
-			return true;
+		if (space.owner() != null && player.equals(space.owner())) {
+            return true;
+        }
 		int group = resolvePlayerHighestGroup(space, player);
 		char[] pm = space.permission(group);
-		if (pm[pmid] == '1')
-			return true;
-		else
-			return false;
+		if (pm[pmid] == '1') {
+            return true;
+        } else {
+            return false;
+        }
 
 	}
 	
@@ -681,11 +702,13 @@ public class SpaceListener implements Listener {
 			for (String s : space.group(i)) {
 				if (s.startsWith(">")) {
 					SpaceGroup group = SpaceGroupManager.getGroup(s.substring(1));
-					if (group.exists() && group.contains(player))
-						return i;
+					if (group.exists() && group.contains(player)) {
+                        return i;
+                    }
 				}
-				else if (s.equals(player))
-					return i;
+				else if (s.equals(player)) {
+                    return i;
+                }
 			}
 		}
 		return 4;

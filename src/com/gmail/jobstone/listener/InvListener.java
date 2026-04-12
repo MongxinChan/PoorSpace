@@ -564,15 +564,17 @@ public class InvListener implements Listener {
 								}
 								break;
 							case STRUCTURE_VOID:
-								if (e.getClick().equals(ClickType.LEFT))
-									SpaceOpen.openGroups(player);
+								if (e.getClick().equals(ClickType.LEFT)) {
+                                    SpaceOpen.openGroups(player);
+                                }
 								break;
 							case PLAYER_HEAD:
 								if (e.getRawSlot() != 1) {
 									String name = e.getCurrentItem().getItemMeta().getDisplayName();
 									name = name.substring(2);
-									if (name.indexOf('§') != -1)
-										name = name.substring(0, name.indexOf('§'));
+									if (name.indexOf('§') != -1) {
+                                        name = name.substring(0, name.indexOf('§'));
+                                    }
 									SpaceGroup.GroupRole clickRole = group.getRole(name);
 									switch (clickRole) {
 										case OP:
@@ -661,9 +663,9 @@ public class InvListener implements Listener {
 					String name = window.substring(4, window.indexOf(' '));
 					SpaceGroup group = new SpaceGroup(name);
 					Player player = (Player) e.getWhoClicked();
-					if (group.create(e.getCurrentItem().getType(), player.getName()))
-						SpaceOpen.openGroup(player, name, 1);
-					else {
+					if (group.create(e.getCurrentItem().getType(), player.getName())) {
+                        SpaceOpen.openGroup(player, name, 1);
+                    } else {
 						player.closeInventory();
 						player.sendMessage("§7【PoorSpace】创建失败：该群组已经存在。");
 					}
@@ -703,9 +705,9 @@ public class InvListener implements Listener {
 			SpaceOpen.openWorld(player, world, 1);
 		}
 		else if (click.startsWith("§e§l空间")) {
-			if (NormalSpace.getWorldId(player.getLocation()) != world)
-				player.sendMessage("§7【PoorSpace】您不在此空间所在世界，无法查看！");
-			else {
+			if (NormalSpace.getWorldId(player.getLocation()) != world) {
+                player.sendMessage("§7【PoorSpace】您不在此空间所在世界，无法查看！");
+            } else {
 				int limit = NormalSpace.limit.getOrDefault(player.getName(), 0);
 				if (limit < 1) {
 					NormalSpace.showParticle(player, id, world);
@@ -724,16 +726,18 @@ public class InvListener implements Listener {
 			SpaceOpen.openSpace(player, id, world);
 		}
 		else if (j != -1) {
-			if (group != 4 && (j == 7 || j == 8))
-				return;
+			if (group != 4 && (j == 7 || j == 8)) {
+                return;
+            }
 			NormalSpace space = new NormalSpace(id, world);
 			if (NormalSpace.isOwned(id, world) && space.owner().equals(player.getName())) {
 				
 				char[] pm = space.permission(group);
-				if (pm[j] == '0')
-					pm[j] = '1';
-				else
-					pm[j] = '0';
+				if (pm[j] == '0') {
+                    pm[j] = '1';
+                } else {
+                    pm[j] = '0';
+                }
 				space.setPermission(group, pm);
 				SpaceManager manager = SpaceManager.getSpaceManager(world);
 				manager.update(id, space);
@@ -757,21 +761,23 @@ public class InvListener implements Listener {
 			int explevel = player.getLevel();
 			int level2 = (int)Math.pow(explevel, 2);
 			  
-			if (explevel <= 16)
-				totalexp = level2 + 6*explevel;
-			else if (explevel <= 31)
-				totalexp = 5*level2/2 - 81*explevel/2 + 360;
-			else
-				totalexp = 9*level2/2 - 325*explevel/2 + 2220;
+			if (explevel <= 16) {
+                totalexp = level2 + 6*explevel;
+            } else if (explevel <= 31) {
+                totalexp = 5*level2/2 - 81*explevel/2 + 360;
+            } else {
+                totalexp = 9*level2/2 - 325*explevel/2 + 2220;
+            }
 			totalexp += player.getExp()*player.getExpToLevel();
 
 			List<String> list = SpacePlayer.getSpaceList(player.getName(), 0);
 			int cost = NormalSpace.cost(id, world);
 			if (world == 0) {
-				if (list.isEmpty())
-					cost = 0;
-				else if (list.size() < 4)
-					cost -= 40;
+				if (list.isEmpty()) {
+                    cost = 0;
+                } else if (list.size() < 4) {
+                    cost -= 40;
+                }
 			}
 			
 			if (totalexp >= cost) {
@@ -812,8 +818,9 @@ public class InvListener implements Listener {
 			
 			if (world == 0) {
 				List<String> list = SpacePlayer.getSpaceList(player.getName(), 0);
-				if (list.size() == 0)
-					return;
+				if (list.size() == 0) {
+                    return;
+                }
 			}
 			
 			File file = new File(PoorSpace.plugin.getDataFolder(), "players/"+player.getName()+"/stats.yml");
