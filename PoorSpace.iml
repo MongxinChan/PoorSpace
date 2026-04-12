@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://F:/MC/插件/自己/1.15/PoorMessage.jar!/" />
+          <root url="jar://D:/02_Workspace/Study/spigot-1.15/plugins/PoorMessage.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -19,11 +19,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://F:/MC/服务器/BuildTools/spigot-1.15.2.jar!/" />
+          <root url="jar://D:/02_Workspace/Study/spigot-1.15/spigot-1.15.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://F:/MC/服务器/BuildTools/spigot-1.15.2.jar!/" />
+          <root url="jar://D:/02_Workspace/Study/spigot-1.15/spigot-1.15.2.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
